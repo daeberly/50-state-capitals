@@ -1,4 +1,4 @@
-# Field Atlas
+# <img src="icon-192.png" width="40" height="40" align="left" style="margin-right:8px;border-radius:8px;"> Field Atlas
 
 A five-level study app for learning all 50 U.S. states and capitals — built as a single self-contained web app that installs like a native app on your phone's home screen.
 
