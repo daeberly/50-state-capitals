@@ -216,22 +216,45 @@ function IsolatedMap({ pack, id }) {
             React.createElement("path", { ref: pathRef, d: d, fill: COLORS.rust, stroke: "#fff", strokeWidth: 2 }))));
 }
 function MiniMap({ pack, highlightId, correctIds, tall }) {
+    const targetRef = useRef(null);
+    const [marker, setMarker] = useState(null);
+    useEffect(() => {
+        setMarker(null);
+        const raf = requestAnimationFrame(() => {
+            if (targetRef.current) {
+                try {
+                    const b = targetRef.current.getBBox();
+                    setMarker({ cx: b.x + b.width / 2, cy: b.y + b.height / 2, w: b.width, h: b.height });
+                }
+                catch (e) { }
+            }
+        });
+        return () => cancelAnimationFrame(raf);
+    }, [highlightId, pack.id]);
     if (!pack.mapViewBox || !pack.statePaths)
         return null;
+    const vbParts = pack.mapViewBox.split(" ").map(Number);
+    const vbWidth = vbParts[2] || 1000;
+    const markerR = vbWidth * 0.02;
+    const showMarker = highlightId != null && marker && Math.max(marker.w, marker.h) < vbWidth * 0.05;
     return (React.createElement("div", { className: `relative w-full rounded overflow-hidden ${tall ? "" : "mb-3"}`, style: { background: "#C7D0E0", border: "1px solid #9FB3D1" } },
-        React.createElement("svg", { viewBox: pack.mapViewBox, className: "w-full h-auto block" }, pack.pairs.map((s) => {
-            const d = pack.statePaths[s.id];
-            if (!d)
-                return null;
-            const isTarget = s.id === highlightId;
-            const isCorrect = correctIds && correctIds.has(s.id);
-            let fill = "#8FA3C4";
-            if (isCorrect)
-                fill = COLORS.lightGreen;
-            if (isTarget)
-                fill = COLORS.rust;
-            return (React.createElement("path", { key: s.id, d, className: isTarget ? "pulse-state" : "", fill, stroke: isTarget ? "#fff" : "#5C7299", strokeWidth: isTarget ? 2 : 0.75 }));
-        }))));
+        React.createElement("svg", { viewBox: pack.mapViewBox, className: "w-full h-auto block" },
+            pack.pairs.map((s) => {
+                const d = pack.statePaths[s.id];
+                if (!d)
+                    return null;
+                const isTarget = s.id === highlightId;
+                const isCorrect = correctIds && correctIds.has(s.id);
+                let fill = "#8FA3C4";
+                if (isCorrect)
+                    fill = COLORS.lightGreen;
+                if (isTarget)
+                    fill = COLORS.rust;
+                return (React.createElement("path", { key: s.id, ref: isTarget ? targetRef : null, d, className: isTarget ? "pulse-state" : "", fill, stroke: isTarget ? "#fff" : "#5C7299", strokeWidth: isTarget ? 2 : 0.75 }));
+            }),
+            showMarker && (React.createElement("g", { style: { pointerEvents: "none" } },
+                React.createElement("circle", { cx: marker.cx, cy: marker.cy, r: markerR + 5, fill: "none", stroke: "#fff", strokeWidth: 5 }),
+                React.createElement("circle", { cx: marker.cx, cy: marker.cy, r: markerR, fill: "none", stroke: COLORS.rust, strokeWidth: 3, className: "pulse-state" }))))));
 }
 const LEVELS = [
     { key: "flash", label: "Flash Cards" },
@@ -852,7 +875,7 @@ function PackApp({ pack, onBackToPacks }) {
                         React.createElement(LevelSummary, { correct: match.correctFirstTry, total: pack.pairs.length, pct: Math.round((match.correctFirstTry / pack.pairs.length) * 100), threshold: passThreshold, alwaysPass: false, reviewMode: false, onRetry: () => setMatch(makeMatch(pack.pairs)), onContinue: () => { finishLevel(true); if (levelIdx < pack.levels.length - 1)
                                 nextLevel(); }, isLast: levelIdx === pack.levels.length - 1 })))),
                 levelKey === "flash" && !deck.finished && current && (React.createElement(React.Fragment, null,
-                    React.createElement(MiniMap, { pack: pack, highlightId: current.id, correctIds: stamped }),
+                    React.createElement(MiniMap, { pack: pack, highlightId: current.id }),
                     pack.focus === "name" ? (React.createElement(React.Fragment, null,
                         React.createElement("p", { className: "font-mono text-xs tracking-widest mb-3", style: { color: "#C9971F" } }, flipped ? "THAT'S" : "WHICH COUNTRY IS HIGHLIGHTED?"),
                         React.createElement("h2", { className: "font-display text-4xl text-center mb-2", style: { color: flipped ? COLORS.rust : COLORS.ink } }, flipped ? current.name : "?"),
@@ -872,7 +895,7 @@ function PackApp({ pack, onBackToPacks }) {
                         React.createElement("button", { disabled: answered, onClick: () => handleFlashKnow(false), className: "font-mono text-xs tracking-widest px-4 py-2 rounded border", style: { borderColor: COLORS.rust, color: COLORS.rust, opacity: answered ? 0.5 : 1 } }, "DIDN'T KNOW"),
                         React.createElement("button", { disabled: answered, onClick: () => handleFlashKnow(true), className: "font-mono text-xs tracking-widest px-4 py-2 rounded", style: { background: COLORS.pine, color: COLORS.paper, opacity: answered ? 0.5 : 1 } }, "KNEW IT"))))),
                 levelKey === "choice" && !deck.finished && current && (React.createElement(React.Fragment, null,
-                    React.createElement(MiniMap, { pack: pack, highlightId: current.id, correctIds: stamped }),
+                    React.createElement(MiniMap, { pack: pack, highlightId: current.id }),
                     pack.focus === "name" ? (React.createElement("p", { className: "font-mono text-xs tracking-widest mb-1", style: { color: "#C9971F" } }, "WHICH COUNTRY IS HIGHLIGHTED?")) : (React.createElement(React.Fragment, null,
                         React.createElement("p", { className: "font-mono text-xs tracking-widest mb-3", style: { color: "#C9971F" } }, "CAPITAL OF"),
                         React.createElement("h2", { className: "font-display text-4xl text-center mb-1", style: { color: COLORS.ink } }, current.name))),
@@ -935,14 +958,7 @@ function PackApp({ pack, onBackToPacks }) {
                 levelKey === "map" && !deck.finished && current && (React.createElement(React.Fragment, null,
                     React.createElement("p", { className: "font-mono text-xs tracking-widest mb-1", style: { color: "#C9971F" } }, pack.focus === "name" ? "WHAT COUNTRY IS HIGHLIGHTED?" : "LOCATE & TYPE THE CAPITAL OF"),
                     pack.focus !== "name" && React.createElement("h2", { className: "font-display text-3xl text-center mb-3", style: { color: COLORS.ink } }, current.name),
-                    React.createElement("div", { className: "relative w-full rounded mb-4 overflow-hidden", style: { background: "#C7D0E0", border: "1px solid #9FB3D1" } },
-                        React.createElement("svg", { viewBox: pack.mapViewBox, className: "w-full h-auto block" }, pack.pairs.map((s) => {
-                            const d = pack.statePaths[s.id];
-                            if (!d)
-                                return null;
-                            const isTarget = s.id === current.id;
-                            return (React.createElement("path", { key: s.id, d: d, className: isTarget ? "pulse-state" : "", fill: isTarget ? COLORS.rust : "#8FA3C4", stroke: isTarget ? "#fff" : "#5C7299", strokeWidth: isTarget ? 2 : 1 }));
-                        }))),
+                    React.createElement(MiniMap, { pack: pack, highlightId: current.id }),
                     React.createElement("form", { onSubmit: handleTypeSubmit, className: "w-full flex flex-col items-center gap-3" },
                         React.createElement("input", { ref: inputRef, value: typed, onChange: (e) => setTyped(e.target.value), disabled: !!feedback, placeholder: pack.focus === "name" ? "Type the country name..." : "Type the capital...", className: "w-full font-mono text-sm px-4 py-3 rounded outline-none", style: { background: "#fff", border: `2px solid ${feedback === "right" ? COLORS.pine : feedback === "wrong" ? COLORS.rust : "#C7D0E0"}`, color: COLORS.ink } }),
                         feedback === "wrong" && React.createElement("p", { className: "font-mono text-xs", style: { color: COLORS.rust } },
@@ -953,7 +969,7 @@ function PackApp({ pack, onBackToPacks }) {
                     pack.focus === "name" ? (React.createElement(React.Fragment, null,
                         React.createElement("p", { className: "font-mono text-xs tracking-widest mb-3", style: { color: "#C9971F" } }, "NAME THIS COUNTRY"),
                         React.createElement(IsolatedMap, { pack: pack, id: current.id }))) : (React.createElement(React.Fragment, null,
-                        React.createElement(MiniMap, { pack: pack, highlightId: current.id, correctIds: stamped }),
+                        React.createElement(MiniMap, { pack: pack, highlightId: current.id }),
                         React.createElement("p", { className: "font-mono text-xs tracking-widest mb-3", style: { color: "#C9971F" } }, "CAPITAL OF"),
                         React.createElement("h2", { className: "font-display text-4xl text-center mb-1", style: { color: COLORS.ink } }, current.name))),
                     React.createElement("p", { className: "font-mono text-[10px] tracking-widest mb-5", style: { color: COLORS.sage } },
