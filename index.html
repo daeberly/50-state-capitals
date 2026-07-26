@@ -31,24 +31,57 @@
 "use strict";
 const { useState, useEffect, useRef } = React;
 const STATES = [
-    ["Alabama", "Montgomery"], ["Alaska", "Juneau"], ["Arizona", "Phoenix"],
-    ["Arkansas", "Little Rock"], ["California", "Sacramento"], ["Colorado", "Denver"],
-    ["Connecticut", "Hartford"], ["Delaware", "Dover"], ["Florida", "Tallahassee"],
-    ["Georgia", "Atlanta"], ["Hawaii", "Honolulu"], ["Idaho", "Boise"],
-    ["Illinois", "Springfield"], ["Indiana", "Indianapolis"], ["Iowa", "Des Moines"],
-    ["Kansas", "Topeka"], ["Kentucky", "Frankfort"], ["Louisiana", "Baton Rouge"],
-    ["Maine", "Augusta"], ["Maryland", "Annapolis"], ["Massachusetts", "Boston"],
-    ["Michigan", "Lansing"], ["Minnesota", "Saint Paul"], ["Mississippi", "Jackson"],
-    ["Missouri", "Jefferson City"], ["Montana", "Helena"], ["Nebraska", "Lincoln"],
-    ["Nevada", "Carson City"], ["New Hampshire", "Concord"], ["New Jersey", "Trenton"],
-    ["New Mexico", "Santa Fe"], ["New York", "Albany"], ["North Carolina", "Raleigh"],
-    ["North Dakota", "Bismarck"], ["Ohio", "Columbus"], ["Oklahoma", "Oklahoma City"],
-    ["Oregon", "Salem"], ["Pennsylvania", "Harrisburg"], ["Rhode Island", "Providence"],
-    ["South Carolina", "Columbia"], ["South Dakota", "Pierre"], ["Tennessee", "Nashville"],
-    ["Texas", "Austin"], ["Utah", "Salt Lake City"], ["Vermont", "Montpelier"],
-    ["Virginia", "Richmond"], ["Washington", "Olympia"], ["West Virginia", "Charleston"],
-    ["Wisconsin", "Madison"], ["Wyoming", "Cheyenne"],
-].map(([name, capital], i) => ({ name, capital, id: i }));
+    ["Alabama", "Montgomery", "Not Birmingham — Montgomery is where Rosa Parks' bus boycott began."],
+    ["Alaska", "Juneau", "Rhymes with \u201cknow\u201d \u2014 you gotta Juneau this one!"],
+    ["Arizona", "Phoenix", "The bird that rises from ashes \u2014 also Arizona's biggest city."],
+    ["Arkansas", "Little Rock", "Picture a literal little rock \u2014 that's the whole name."],
+    ["California", "Sacramento", "Not LA or SF \u2014 Sacramento sits quietly inland."],
+    ["Colorado", "Denver", "The \u201cMile High City\u201d \u2014 elevation is the giveaway."],
+    ["Connecticut", "Hartford", "Known as the insurance capital of the world."],
+    ["Delaware", "Dover", "Double D: Dover, Delaware."],
+    ["Florida", "Tallahassee", "Not Miami or Orlando \u2014 it's a bit of a \u201chassle\u201d to recall Tallahassee."],
+    ["Georgia", "Atlanta", "Home of the 1996 Olympics and CNN \u2014 Georgia's biggest city."],
+    ["Hawaii", "Honolulu", "The only major city on Oahu \u2014 hard to forget."],
+    ["Idaho", "Boise", "Sounds like \u201cboy-see\u201d \u2014 boy, see all the potatoes Idaho grows."],
+    ["Illinois", "Springfield", "Not Chicago \u2014 and yes, also the Simpsons' hometown."],
+    ["Indiana", "Indianapolis", "It's right there in the name: INDIANA-polis."],
+    ["Iowa", "Des Moines", "French for \u201cof the monks\u201d \u2014 sounds like \u201cduh-MOIN.\u201d"],
+    ["Kansas", "Topeka", "Rhymes with \u201cKansas\u201d if you squint \u2014 To-PEE-ka."],
+    ["Kentucky", "Frankfort", "Not Louisville (home of the Derby) \u2014 it's Frankfort."],
+    ["Louisiana", "Baton Rouge", "French for \u201cred stick\u201d \u2014 picture a red baton."],
+    ["Maine", "Augusta", "Sounds like the month August \u2014 visit Maine's Augusta then."],
+    ["Maryland", "Annapolis", "Not Baltimore \u2014 think of \u201cAnn\u201d living in Annapolis."],
+    ["Massachusetts", "Boston", "Tea Party, Red Sox \u2014 Massachusetts' famous capital."],
+    ["Michigan", "Lansing", "Not Detroit \u2014 Lansing quietly holds the title."],
+    ["Minnesota", "Saint Paul", "Not Minneapolis \u2014 its \u201cTwin City\u201d next door is the capital."],
+    ["Mississippi", "Jackson", "Named for Andrew Jackson \u2014 an easy name to place."],
+    ["Missouri", "Jefferson City", "Named for Thomas Jefferson, who bought the land in 1803."],
+    ["Montana", "Helena", "A first name hiding in \u201cBig Sky Country.\u201d"],
+    ["Nebraska", "Lincoln", "Named for Abraham Lincoln \u2014 straightforward to remember."],
+    ["Nevada", "Carson City", "Not Las Vegas or Reno \u2014 named for frontiersman Kit Carson."],
+    ["New Hampshire", "Concord", "Means \u201charmony\u201d \u2014 fitting for a quiet capital."],
+    ["New Jersey", "Trenton", "Not Newark \u2014 \u201cTrenton Makes, the World Takes\u201d is the state motto."],
+    ["New Mexico", "Santa Fe", "Spanish for \u201choly faith\u201d \u2014 a name with real meaning."],
+    ["New York", "Albany", "Not New York City! Albany sits upstate."],
+    ["North Carolina", "Raleigh", "Not Charlotte \u2014 named for explorer Sir Walter Raleigh."],
+    ["North Dakota", "Bismarck", "Named for Germany's Otto von Bismarck to attract settlers."],
+    ["Ohio", "Columbus", "Named for Christopher Columbus \u2014 not Cleveland or Cincinnati."],
+    ["Oklahoma", "Oklahoma City", "The state name IS the capital \u2014 a free one."],
+    ["Oregon", "Salem", "Not Portland \u2014 and yes, same name as the Massachusetts witch-trials town."],
+    ["Pennsylvania", "Harrisburg", "Not Philadelphia or Pittsburgh \u2014 Harrisburg sits in between."],
+    ["Rhode Island", "Providence", "Means divine guidance \u2014 a fittingly hopeful name."],
+    ["South Carolina", "Columbia", "Not Charleston \u2014 and don't confuse it with Columbus, Ohio."],
+    ["South Dakota", "Pierre", "Pronounced \u201cpeer\u201d \u2014 peer out over the plains."],
+    ["Tennessee", "Nashville", "Music City \u2014 Tennessee's famous capital."],
+    ["Texas", "Austin", "Not Houston or Dallas \u2014 Austin is the Live Music Capital."],
+    ["Utah", "Salt Lake City", "Named for the Great Salt Lake right beside it."],
+    ["Vermont", "Montpelier", "The smallest state capital by population \u2014 easy to overlook."],
+    ["Virginia", "Richmond", "Former capital of the Confederacy \u2014 a weighty piece of history."],
+    ["Washington", "Olympia", "Not Seattle \u2014 named for the nearby Olympic Mountains."],
+    ["West Virginia", "Charleston", "Not to be confused with Charleston, South Carolina."],
+    ["Wisconsin", "Madison", "Named for President James Madison."],
+    ["Wyoming", "Cheyenne", "Named for the Cheyenne Nation."],
+].map(([name, capital, hint], i) => ({ name, capital, hint, id: i }));
 const MAP_VIEWBOX = "174 100 959 593";
 const STATE_PATHS = {
     0: "M799.6,566.8l-1.6-15.2l-2.7-18.8l0.2-14.1l0.8-31l-0.2-16.7l0.2-6.4l7.8-0.4l27.8-2.6l8.9-0.7 l-0.1,2.2l0.2,2.1l0.6,3.4l3.4,7.9l2.4,9.9l1.5,6.1l1.6,4.8l1.5,7l2.1,6.3l2.6,3.4l0.5,3.4l1.9,0.8l0.2,2.1l-1.8,4.8l-0.5,3.2 l-0.2,1.9l1.6,4.4l0.3,5.3l-0.8,2.4l0.6,0.8l1.5,0.8l1,2.5h-6.3l-6.8,0.6l-25.5,2.9l-10.4,1.4l-0.1,3.8l1.8,1.8l2.6,1.9l0.6,7.9 l-5.5,2.6l-2.7-0.3l2.7-1.9v-1l-3.1-6l-2.3-0.6l-1.5,4.4l-1.3,2.7l-0.6-0.2H799.6z",
@@ -129,14 +162,15 @@ function shuffle(arr) {
 function normalize(s) {
     return s.trim().toLowerCase().replace(/^(st\.?|saint)\s/, "saint ").replace(/[^a-z ]/g, "");
 }
-function makeDeck() {
-    return { order: shuffle(STATES), pos: 0, correct: 0, total: 0, finished: false };
+function makeDeck(pairs) {
+    return { order: shuffle(pairs), pos: 0, correct: 0, total: 0, finished: false };
 }
-function makeMatch() {
-    const shuffled = shuffle(STATES);
+function makeMatch(pairs) {
+    const shuffled = shuffle(pairs);
     const batches = [];
-    for (let i = 0; i < 50; i += 10)
-        batches.push(shuffled.slice(i, i + 10));
+    const batchSize = 10;
+    for (let i = 0; i < shuffled.length; i += batchSize)
+        batches.push(shuffled.slice(i, i + batchSize));
     return {
         batches, batchIndex: 0,
         matchedIds: new Set(), wrongPairs: new Set(), correctFirstTry: 0,
@@ -146,13 +180,13 @@ function makeMatch() {
         finished: false,
     };
 }
-function buildChoiceOptions(current) {
-    const nearbyIds = (NEARBY[current.id] || []).filter((id) => id !== current.id);
-    const nearbyStates = shuffle(nearbyIds.map((id) => STATES[id]));
+function buildChoiceOptions(current, nearbyMap, allPairs) {
+    const nearbyIds = ((nearbyMap && nearbyMap[current.id]) || []).filter((id) => id !== current.id);
+    const nearbyStates = shuffle(nearbyIds.map((id) => allPairs[id]).filter(Boolean));
     const picked = nearbyStates.slice(0, 3);
     if (picked.length < 3) {
         const usedIds = new Set([current.id, ...picked.map((s) => s.id)]);
-        const filler = shuffle(STATES.filter((s) => !usedIds.has(s.id))).slice(0, 3 - picked.length);
+        const filler = shuffle(allPairs.filter((s) => !usedIds.has(s.id))).slice(0, 3 - picked.length);
         picked.push(...filler);
     }
     return shuffle([current, ...picked]);
@@ -164,6 +198,108 @@ const LEVELS = [
     { key: "map", label: "Map Fill-In" },
     { key: "blank", label: "Fill in the Blank" },
 ];
+const SOUTH_AMERICA = [
+    ["Argentina", "Buenos Aires", "Spanish for \u201cgood airs\u201d \u2014 a fresh Atlantic breeze in the name."],
+    ["Bolivia", "Sucre", "The constitutional capital \u2014 though La Paz (the seat of government) often gets the credit instead."],
+    ["Brazil", "Bras\u00edlia", "A capital built from scratch in 1960, replacing Rio de Janeiro \u2014 not Rio!"],
+    ["Chile", "Santiago", "Named for Saint James \u2014 sits roughly in the middle of Chile's very long, thin shape."],
+    ["Colombia", "Bogot\u00e1", "High in the Andes \u2014 not Medell\u00edn or Cartagena, Colombia's better-known cities."],
+    ["Ecuador", "Quito", "One of the highest capital cities in the world, with a UNESCO-listed historic center."],
+    ["Guyana", "Georgetown", "The only English-speaking country in South America \u2014 named for a British king."],
+    ["Paraguay", "Asunci\u00f3n", "Spanish for \u201cAssumption\u201d \u2014 founded on that religious feast day in 1537."],
+    ["Peru", "Lima", "Legend says early Spanish settlers misheard the R\u00edmac River's name as \u201cLima.\u201d"],
+    ["Suriname", "Paramaribo", "A former Dutch colony \u2014 its capital's name comes from an Indigenous village that once stood there."],
+    ["Uruguay", "Montevideo", "Legend says a lookout cried \u201cMonte vide eu\u201d \u2014 \u201cI see a mountain\u201d \u2014 spotting this coastal hill."],
+    ["Venezuela", "Caracas", "Named for the Caracas people who lived in the valley before Spanish colonization."],
+].map(([name, capital, hint], i) => ({ name, capital, hint, id: i }));
+const SA_NEARBY = {
+    0: [1, 2, 3, 7, 10], 1: [0, 2, 3, 7, 8], 2: [0, 1, 4, 6, 7, 8, 9, 10, 11],
+    3: [0, 1, 8], 4: [2, 5, 8, 11], 5: [4, 8], 6: [2, 9, 11], 7: [0, 1, 2],
+    8: [1, 2, 3, 4, 5], 9: [2, 6], 10: [0, 2], 11: [2, 4, 6],
+};
+const LEVELS_NO_MAP = LEVELS.filter((l) => l.key !== "map");
+const EUROPE = [
+    ["Albania", "Tirana", "Sits inland near the country's center, not on the Adriatic coast most visitors picture."],
+    ["Andorra", "Andorra la Vella", "A tiny alpine microstate wedged between France and Spain."],
+    ["Austria", "Vienna", "Centuries of Habsburg rule and composers like Mozart \u2014 not Salzburg, his birthplace."],
+    ["Belarus", "Minsk", "Rebuilt almost entirely after WWII \u2014 one of Europe's most modern-looking old capitals."],
+    ["Belgium", "Brussels", "Also the de facto capital of the EU \u2014 not Antwerp or Bruges, Belgium's better-known tourist cities."],
+    ["Bosnia and Herzegovina", "Sarajevo", "Hosted the 1984 Winter Olympics, decades after the 1914 assassination that helped spark WWI."],
+    ["Bulgaria", "Sofia", "Named for the Hagia Sofia church at its center \u2014 not Plovdiv, one of Europe's oldest cities."],
+    ["Croatia", "Zagreb", "Not the coastal tourist favorite Dubrovnik \u2014 Zagreb sits inland in the north."],
+    ["Cyprus", "Nicosia", "The last divided capital city in Europe, split between Greek and Turkish Cypriot sides."],
+    ["Czech Republic", "Prague", "The \u201cCity of a Hundred Spires\u201d \u2014 the country's short-form name is Czechia."],
+    ["Denmark", "Copenhagen", "Home of the Little Mermaid statue and Tivoli Gardens, one of the world's oldest amusement parks."],
+    ["Estonia", "Tallinn", "One of Europe's best-preserved medieval old towns, a UNESCO World Heritage site."],
+    ["Finland", "Helsinki", "Sits right across the Gulf of Finland from Estonia's Tallinn."],
+    ["France", "Paris", "The Eiffel Tower and the Louvre \u2014 hardly needs a hint."],
+    ["Germany", "Berlin", "Not Munich or Frankfurt \u2014 Berlin was divided by a wall until 1989."],
+    ["Greece", "Athens", "Named for its patron goddess, and home to the Acropolis."],
+    ["Hungary", "Budapest", "Actually two cities, Buda and Pest, merged in 1873 on either side of the Danube."],
+    ["Iceland", "Reykjavik", "The world's northernmost capital of a sovereign country."],
+    ["Ireland", "Dublin", "Sits on the River Liffey \u2014 home to Guinness and the Book of Kells."],
+    ["Italy", "Rome", "All roads lead here \u2014 also home to Vatican City, a separate country entirely."],
+    ["Latvia", "Riga", "The largest city in the Baltic states, known for its Art Nouveau architecture."],
+    ["Liechtenstein", "Vaduz", "One of the smallest capitals in the world, in a country you can cross in an afternoon."],
+    ["Lithuania", "Vilnius", "One of Europe's largest surviving medieval old towns."],
+    ["Luxembourg", "Luxembourg City", "Same name as the country \u2014 like Oklahoma City, no guesswork needed."],
+    ["Malta", "Valletta", "One of Europe's smallest capitals, built by the Knights of St. John."],
+    ["Moldova", "Chisinau", "Wedged between Romania and Ukraine \u2014 one of Europe's least-visited capitals."],
+    ["Monaco", "Monaco", "The city-state and the country share one name \u2014 famous for its Grand Prix and casino."],
+    ["Montenegro", "Podgorica", "Means \u201cunder the little hill\u201d \u2014 not the coastal tourist town of Kotor."],
+    ["Netherlands", "Amsterdam", "The constitutional capital \u2014 though The Hague is where the government and king actually work."],
+    ["North Macedonia", "Skopje", "The country renamed itself in 2019 to settle a decades-long dispute with Greece."],
+    ["Norway", "Oslo", "Sits at the head of a long fjord \u2014 hosts the Nobel Peace Prize ceremony each year."],
+    ["Poland", "Warsaw", "Rebuilt from rubble after near-total WWII destruction \u2014 not Krakow, the former royal capital."],
+    ["Portugal", "Lisbon", "One of the oldest cities in Western Europe \u2014 some say older than Rome."],
+    ["Romania", "Bucharest", "Once nicknamed \u201cLittle Paris\u201d for its grand 19th-century boulevards."],
+    ["Russia", "Moscow", "Sits in European Russia, west of the Ural Mountains that mark the continental divide."],
+    ["San Marino", "San Marino", "One of the world's oldest republics, entirely surrounded by Italy."],
+    ["Serbia", "Belgrade", "Means \u201cwhite city\u201d \u2014 sits where the Sava River meets the Danube."],
+    ["Slovakia", "Bratislava", "The only national capital in the world that borders two other countries: Austria and Hungary."],
+    ["Slovenia", "Ljubljana", "Small, green, and walkable \u2014 often called one of Europe's most livable capitals."],
+    ["Spain", "Madrid", "Europe's highest-altitude capital \u2014 not Barcelona, its larger coastal rival."],
+    ["Sweden", "Stockholm", "Built across 14 islands \u2014 sometimes called the \u201cVenice of the North.\u201d"],
+    ["Switzerland", "Bern", "Not Zurich or Geneva \u2014 Bern was picked in 1848 as a compromise between rival regions."],
+    ["Ukraine", "Kyiv", "One of the oldest cities in Eastern Europe, birthplace of the medieval Kievan Rus'."],
+    ["United Kingdom", "London", "Home to Big Ben, the Thames, and the monarchy."],
+    ["Vatican City", "Vatican City", "The world's smallest country \u2014 an independent city-state inside Rome."],
+].map(([name, capital, hint], i) => ({ name, capital, hint, id: i }));
+const EU_NEARBY = {
+    0: [27, 29, 15], 1: [13, 39], 2: [14, 9, 37, 16, 38, 19, 41, 21], 3: [34, 42, 31, 22, 20],
+    4: [13, 14, 28, 23], 5: [7, 36, 27], 6: [33, 36, 29, 15], 7: [38, 16, 36, 5, 27],
+    8: [], 9: [14, 31, 37, 2], 10: [14], 11: [34, 20], 12: [34, 40, 30],
+    13: [4, 23, 14, 41, 19, 26, 39, 1], 14: [10, 31, 9, 2, 41, 13, 23, 4, 28], 15: [0, 29, 6],
+    16: [2, 37, 42, 33, 36, 7, 38], 17: [], 18: [43], 19: [13, 41, 2, 38, 35, 44],
+    20: [11, 34, 3, 22], 21: [41, 2], 22: [20, 3, 31, 34], 23: [4, 14, 13], 24: [],
+    25: [33, 42], 26: [13], 27: [7, 5, 36, 0], 28: [14, 4], 29: [0, 15, 6, 36],
+    30: [40, 12, 34], 31: [14, 9, 37, 42, 3, 22, 34], 32: [39], 33: [16, 42, 25, 6, 36],
+    34: [30, 12, 11, 20, 22, 31, 3, 42], 35: [19], 36: [16, 33, 6, 29, 27, 5, 7],
+    37: [9, 31, 42, 16, 2], 38: [19, 2, 16, 7], 39: [13, 1, 32], 40: [30, 12],
+    41: [14, 13, 19, 2, 21], 42: [34, 3, 31, 37, 16, 33, 25], 43: [18], 44: [19],
+};
+const PACKS = {
+    states: {
+        id: "states", title: "50 States & Capitals", subtitle: "50 STATES \u00B7 50 CAPITALS",
+        pairs: STATES, nearby: NEARBY, mapViewBox: MAP_VIEWBOX, statePaths: STATE_PATHS,
+        levels: LEVELS, locked: false,
+    },
+    southamerica: {
+        id: "southamerica", title: "South America", subtitle: "12 COUNTRIES \u00B7 12 CAPITALS",
+        pairs: SOUTH_AMERICA, nearby: SA_NEARBY, mapViewBox: null, statePaths: null,
+        levels: LEVELS_NO_MAP, locked: false,
+    },
+    europe: {
+        id: "europe", title: "Europe", subtitle: "45 COUNTRIES \u00B7 45 CAPITALS",
+        pairs: EUROPE, nearby: EU_NEARBY, mapViewBox: null, statePaths: null,
+        levels: LEVELS_NO_MAP, locked: false,
+    },
+    africa: { id: "africa", title: "Africa", subtitle: "COUNTRIES \u00B7 CAPITALS", locked: true },
+    asia: { id: "asia", title: "Asia", subtitle: "COUNTRIES \u00B7 CAPITALS", locked: true },
+    northamerica: { id: "northamerica", title: "North America", subtitle: "COUNTRIES \u00B7 CAPITALS", locked: true },
+    oceania: { id: "oceania", title: "Oceania", subtitle: "COUNTRIES \u00B7 CAPITALS", locked: true },
+};
+const PACK_ORDER = ["states", "southamerica", "europe", "africa", "asia", "northamerica", "oceania"];
 const PASS = 0.7;
 const GRADE_OPTIONS = [
     { value: 1.0, pct: 100, grade: "A+" },
@@ -232,10 +368,9 @@ function triggerIOSHaptic() {
     if (el)
         el.click();
 }
-const STORAGE_KEY = "fieldAtlasProgress_v2";
-function loadProgress() {
+function loadProgress(key) {
     try {
-        const raw = window.localStorage.getItem(STORAGE_KEY);
+        const raw = window.localStorage.getItem(key);
         if (!raw)
             return null;
         return JSON.parse(raw);
@@ -244,28 +379,28 @@ function loadProgress() {
         return null;
     }
 }
-function saveProgress(data) {
+function saveProgress(key, data) {
     try {
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        window.localStorage.setItem(key, JSON.stringify(data));
     }
     catch (e) { }
 }
-function clearProgress() {
+function clearProgress(key) {
     try {
-        window.localStorage.removeItem(STORAGE_KEY);
+        window.localStorage.removeItem(key);
     }
     catch (e) { }
 }
-function makeDeckFromSaved(saved) {
+function makeDeckFromSaved(saved, pairs) {
     if (!saved)
-        return makeDeck();
-    return { order: saved.order.map((id) => STATES[id]), pos: saved.pos, correct: saved.correct, total: saved.total, finished: saved.finished };
+        return makeDeck(pairs);
+    return { order: saved.order.map((id) => pairs[id]), pos: saved.pos, correct: saved.correct, total: saved.total, finished: saved.finished };
 }
-function makeMatchFromSaved(saved) {
+function makeMatchFromSaved(saved, pairs) {
     if (!saved)
-        return makeMatch();
+        return makeMatch(pairs);
     return {
-        batches: saved.batches.map((b) => b.map((id) => STATES[id])),
+        batches: saved.batches.map((b) => b.map((id) => pairs[id])),
         batchIndex: saved.batchIndex,
         matchedIds: new Set(saved.matchedIds),
         wrongPairs: new Set(saved.wrongPairs),
@@ -276,7 +411,35 @@ function makeMatchFromSaved(saved) {
     };
 }
 function App() {
-    const saved = loadProgress();
+    const [activePackId, setActivePackId] = useState(null);
+    if (!activePackId) {
+        return React.createElement(Landing, { onSelect: setActivePackId });
+    }
+    return React.createElement(PackApp, { pack: PACKS[activePackId], onBackToPacks: () => setActivePackId(null) });
+}
+function Landing({ onSelect }) {
+    return (React.createElement("div", { className: "min-h-[100dvh] w-full flex items-start justify-center py-8 px-4", style: { background: COLORS.ink, fontFamily: "'Inter', sans-serif" } },
+        React.createElement("div", { className: "w-full max-w-2xl" },
+            React.createElement("h1", { className: "font-display text-4xl mb-1 text-center", style: { color: COLORS.paper } }, "Field Atlas"),
+            React.createElement("p", { className: "font-mono text-xs tracking-widest text-center mb-8", style: { color: COLORS.sage } }, "CHOOSE A REGION TO STUDY"),
+            React.createElement("div", { className: "grid grid-cols-1 gap-3" }, PACK_ORDER.map((id) => {
+                const p = PACKS[id];
+                return React.createElement("button", { key: id, disabled: p.locked, onClick: () => !p.locked && onSelect(id), className: "text-left rounded-lg p-5 flex items-center justify-between", style: {
+                        background: p.locked ? COLORS.panel : COLORS.paper,
+                        border: `1px solid ${COLORS.panelBorder}`,
+                        opacity: p.locked ? 0.55 : 1,
+                        cursor: p.locked ? "not-allowed" : "pointer",
+                    } },
+                    React.createElement("div", null,
+                        React.createElement("div", { className: "font-display text-xl", style: { color: p.locked ? COLORS.sage : COLORS.ink } }, p.title),
+                        React.createElement("div", { className: "font-mono text-[10px] tracking-widest mt-1", style: { color: p.locked ? COLORS.sage : COLORS.rust } }, p.locked ? "COMING SOON" : p.subtitle)),
+                    React.createElement("span", { style: { color: COLORS.sage, fontSize: 22 } }, p.locked ? "\uD83D\uDD12" : "\u2192"));
+            })))));
+}
+function PackApp({ pack, onBackToPacks }) {
+    const STORAGE_KEY = `fieldAtlasProgress_v2_${pack.id}`;
+    const saved = loadProgress(STORAGE_KEY);
+
     const [levelIdx, setLevelIdx] = useState(() => (saved ? saved.levelIdx : 0));
     const [unlockedUpTo, setUnlockedUpTo] = useState(() => (saved ? saved.unlockedUpTo : 0));
     const [completed, setCompleted] = useState(() => new Set(saved ? saved.completed : []));
@@ -285,24 +448,25 @@ function App() {
     const [missCounts, setMissCounts] = useState(() => (saved ? saved.missCounts || {} : {}));
     const [view, setView] = useState("main");
     const [reviewMode, setReviewMode] = useState(false);
-    const [deck, setDeck] = useState(() => (saved && saved.deck ? makeDeckFromSaved(saved.deck) : makeDeck()));
+    const [deck, setDeck] = useState(() => (saved && saved.deck ? makeDeckFromSaved(saved.deck, pack.pairs) : makeDeck(pack.pairs)));
     const [flipped, setFlipped] = useState(false);
+    const [showHint, setShowHint] = useState(false);
     const [choiceOptions, setChoiceOptions] = useState([]);
     const [pickedChoice, setPickedChoice] = useState(null);
     const [typed, setTyped] = useState("");
     const [feedback, setFeedback] = useState(null);
     const [stampBurst, setStampBurst] = useState(false);
     const [answered, setAnswered] = useState(false);
-    const [match, setMatch] = useState(() => (saved && saved.match ? makeMatchFromSaved(saved.match) : makeMatch()));
+    const [match, setMatch] = useState(() => (saved && saved.match ? makeMatchFromSaved(saved.match, pack.pairs) : makeMatch(pack.pairs)));
     const inputRef = useRef(null);
     const didMount = useRef(false);
     function resetProgress() {
         if (window.confirm("Clear all saved progress? This can't be undone.")) {
-            clearProgress();
+            clearProgress(STORAGE_KEY);
             window.location.reload();
         }
     }
-    const levelKey = reviewMode ? "blank" : LEVELS[levelIdx].key;
+    const levelKey = reviewMode ? "blank" : pack.levels[levelIdx].key;
     const current = deck.order[deck.pos];
     useEffect(() => {
         if (reviewMode)
@@ -312,14 +476,14 @@ function App() {
             return;
         }
         if (levelKey === "matching") {
-            setMatch(makeMatch());
+            setMatch(makeMatch(pack.pairs));
             return;
         }
-        setDeck(makeDeck());
+        setDeck(makeDeck(pack.pairs));
         setStamped(new Set());
     }, [levelIdx]);
     useEffect(() => {
-        saveProgress({
+        saveProgress(STORAGE_KEY, {
             levelIdx, unlockedUpTo,
             completed: Array.from(completed),
             stamped: Array.from(stamped),
@@ -337,7 +501,7 @@ function App() {
     }, [levelIdx, unlockedUpTo, completed, stamped, passThreshold, missCounts, deck, match]);
     useEffect(() => {
         if (levelKey === "choice" && current && !deck.finished) {
-            setChoiceOptions(buildChoiceOptions(current));
+            setChoiceOptions(buildChoiceOptions(current, pack.nearby, pack.pairs));
             setPickedChoice(null);
         }
         if ((levelKey === "map" || levelKey === "blank") && !deck.finished) {
@@ -345,6 +509,7 @@ function App() {
             setTimeout(() => { var _a; return (_a = inputRef.current) === null || _a === void 0 ? void 0 : _a.focus(); }, 50);
         }
         setFlipped(false);
+        setShowHint(false);
         setFeedback(null);
         setAnswered(false);
     }, [deck.pos, levelKey, deck.finished]);
@@ -383,7 +548,7 @@ function App() {
     function finishLevel(passed) {
         if (passed) {
             setCompleted((prev) => new Set(prev).add(levelIdx));
-            setUnlockedUpTo((u) => Math.max(u, Math.min(levelIdx + 1, LEVELS.length - 1)));
+            setUnlockedUpTo((u) => Math.max(u, Math.min(levelIdx + 1, pack.levels.length - 1)));
         }
     }
     function goToLevel(i) {
@@ -392,14 +557,14 @@ function App() {
         setLevelIdx(i);
     }
     function retryLevel() {
-        setDeck(makeDeck());
+        setDeck(makeDeck(pack.pairs));
     }
     function nextLevel() {
-        setLevelIdx((i) => Math.min(i + 1, LEVELS.length - 1));
+        setLevelIdx((i) => Math.min(i + 1, pack.levels.length - 1));
     }
     function startReview() {
         const ranked = Object.keys(missCounts)
-            .map((id) => ({ ...STATES[Number(id)], misses: missCounts[id] }))
+            .map((id) => ({ ...pack.pairs[Number(id)], misses: missCounts[id] }))
             .filter((s) => s.misses > 0)
             .sort((a, b) => b.misses - a.misses)
             .slice(0, 10);
@@ -410,7 +575,7 @@ function App() {
     }
     function exitReview() {
         setReviewMode(false);
-        setDeck(makeDeck());
+        setDeck(makeDeck(pack.pairs));
     }
     function handleChoice(opt) {
         if (pickedChoice)
@@ -482,12 +647,12 @@ function App() {
             return { ...m, selectedCapital: id };
         });
     }
-    const progressPct = Math.round((stamped.size / 50) * 100);
+    const progressPct = Math.round((stamped.size / pack.pairs.length) * 100);
     const deckPct = deck.total ? Math.round((deck.correct / deck.total) * 100) : 0;
     const currentBatch = levelKey === "matching" ? match.batches[match.batchIndex] : null;
     const weakCount = Object.values(missCounts).filter((n) => n > 0).length;
     if (view === "study") {
-        return React.createElement(StudyList, { onBack: () => setView("main") });
+        return React.createElement(StudyList, { onBack: () => setView("main"), pairs: pack.pairs, title: pack.title });
     }
     return (React.createElement("div", { className: "min-h-[100dvh] w-full flex items-start justify-center py-8 px-4", style: { background: COLORS.ink, fontFamily: "'Inter', sans-serif" } },
         React.createElement("style", null, `
@@ -519,12 +684,15 @@ function App() {
             React.createElement("div", { className: "flex items-center justify-between mb-5" },
                 React.createElement("div", null,
                     React.createElement("h1", { className: "font-display text-3xl", style: { color: COLORS.paper } }, "Field Atlas"),
-                    React.createElement("p", { className: "font-mono text-xs tracking-wide", style: { color: COLORS.sage } }, "50 STATES \u00B7 50 CAPITALS \u00B7 NO. 1848"),
-                    React.createElement("a", { href: "https://github.com/daeberly/50-state-capitals/blob/58c2755cadaf7121c876f0ef54f995e42549b700/README.md", target: "_blank", rel: "noopener noreferrer", className: "font-mono text-[9px] tracking-widest underline", style: { color: COLORS.sage } }, "How This Works (click here)")),
+                    React.createElement("p", { className: "font-mono text-xs tracking-wide", style: { color: COLORS.sage } }, pack.subtitle),
+                    React.createElement("div", { className: "flex gap-3 mt-1" },
+                        React.createElement("button", { onClick: onBackToPacks, className: "font-mono text-[9px] tracking-widest underline", style: { color: COLORS.sage, background: "none", border: "none", padding: 0 } }, "\u2039 ALL PACKS"),
+                        React.createElement("a", { href: "https://github.com/daeberly/50-state-capitals/blob/58c2755cadaf7121c876f0ef54f995e42549b700/README.md", target: "_blank", rel: "noopener noreferrer", className: "font-mono text-[9px] tracking-widest underline", style: { color: COLORS.sage } }, "How This Works (click here)"))),
                 React.createElement("div", { className: "text-right font-mono", style: { color: COLORS.brass } },
                     React.createElement("div", { className: "text-2xl leading-none" },
                         stamped.size,
-                        "/50"),
+                        "/",
+                        pack.pairs.length),
                     React.createElement("div", { className: "text-[10px] tracking-widest", style: { color: COLORS.sage } }, "STAMPED"),
                     React.createElement("button", { onClick: resetProgress, className: "text-[9px] tracking-widest underline mt-1", style: { color: COLORS.sage, background: "none", border: "none", padding: 0 } }, "RESET PROGRESS"))),
             React.createElement("div", { className: "flex gap-2 mb-5" },
@@ -536,7 +704,7 @@ function App() {
                     } }, reviewMode ? "BACK TO LEVELS" : `REVIEW WEAK STATES (${weakCount})`)),
             !reviewMode && (React.createElement(React.Fragment, null,
                 React.createElement("div", { className: "rounded-md p-3 mb-5", style: { background: COLORS.panel, border: `1px solid ${COLORS.panelBorder}` } },
-                    React.createElement("div", { className: "flex gap-1" }, LEVELS.map((lv, i) => {
+                    React.createElement("div", { className: "flex gap-1" }, pack.levels.map((lv, i) => {
                         const isLocked = i > unlockedUpTo;
                         const isDone = completed.has(i);
                         const isCurrent = i === levelIdx;
@@ -569,12 +737,12 @@ function App() {
                 stampBurst && (React.createElement("div", { className: "stamp-anim absolute top-4 right-4 rounded-full flex items-center justify-center font-display font-bold text-xs px-4 py-4 border-4", style: { color: COLORS.rust, borderColor: COLORS.rust, transform: "rotate(-14deg)" } }, "STAMPED")),
                 (levelKey !== "matching" && deck.finished) && (React.createElement("div", { className: "absolute inset-0 flex items-center justify-center rounded-lg", style: { background: "rgba(30,42,34,0.55)" } },
                     React.createElement("div", { className: "pop-in rounded-lg p-8 mx-6", style: { background: COLORS.paper, border: `1px solid ${COLORS.panelBorder}`, boxShadow: "0 12px 30px rgba(0,0,0,0.35)" } },
-                        React.createElement(LevelSummary, { correct: deck.correct, total: deck.total, pct: deckPct, threshold: passThreshold, alwaysPass: reviewMode || levelKey === "flash", reviewMode: reviewMode, onRetry: reviewMode ? startReview : retryLevel, onExitReview: exitReview, onContinue: () => { finishLevel(true); if (levelIdx < LEVELS.length - 1)
-                                nextLevel(); }, isLast: levelIdx === LEVELS.length - 1 })))),
+                        React.createElement(LevelSummary, { correct: deck.correct, total: deck.total, pct: deckPct, threshold: passThreshold, alwaysPass: reviewMode || levelKey === "flash", reviewMode: reviewMode, onRetry: reviewMode ? startReview : retryLevel, onExitReview: exitReview, onContinue: () => { finishLevel(true); if (levelIdx < pack.levels.length - 1)
+                                nextLevel(); }, isLast: levelIdx === pack.levels.length - 1 })))),
                 levelKey === "matching" && match.finished && (React.createElement("div", { className: "absolute inset-0 flex items-center justify-center rounded-lg", style: { background: "rgba(30,42,34,0.55)" } },
                     React.createElement("div", { className: "pop-in rounded-lg p-8 mx-6", style: { background: COLORS.paper, border: `1px solid ${COLORS.panelBorder}`, boxShadow: "0 12px 30px rgba(0,0,0,0.35)" } },
-                        React.createElement(LevelSummary, { correct: match.correctFirstTry, total: 50, pct: Math.round((match.correctFirstTry / 50) * 100), threshold: passThreshold, alwaysPass: false, reviewMode: false, onRetry: () => setMatch(makeMatch()), onContinue: () => { finishLevel(true); if (levelIdx < LEVELS.length - 1)
-                                nextLevel(); }, isLast: levelIdx === LEVELS.length - 1 })))),
+                        React.createElement(LevelSummary, { correct: match.correctFirstTry, total: pack.pairs.length, pct: Math.round((match.correctFirstTry / pack.pairs.length) * 100), threshold: passThreshold, alwaysPass: false, reviewMode: false, onRetry: () => setMatch(makeMatch(pack.pairs)), onContinue: () => { finishLevel(true); if (levelIdx < pack.levels.length - 1)
+                                nextLevel(); }, isLast: levelIdx === pack.levels.length - 1 })))),
                 levelKey === "flash" && !deck.finished && current && (React.createElement(React.Fragment, null,
                     React.createElement("p", { className: "font-mono text-xs tracking-widest mb-3", style: { color: "#C9971F" } }, "WHAT IS THE CAPITAL OF"),
                     React.createElement("h2", { className: "font-display text-4xl text-center mb-2", style: { color: flipped ? COLORS.rust : COLORS.ink } }, flipped ? current.capital : current.name),
@@ -582,6 +750,9 @@ function App() {
                         deck.pos + 1,
                         " / ",
                         deck.order.length),
+                    current.hint && (React.createElement(React.Fragment, null,
+                        React.createElement("button", { onClick: () => setShowHint((h) => !h), className: "mt-3 font-mono text-[10px] tracking-widest underline", style: { color: COLORS.sage, background: "none", border: "none", padding: 0 } }, showHint ? "HIDE HINT" : "SHOW HINT \uD83D\uDCA1"),
+                        showHint && (React.createElement("p", { className: "font-mono text-xs text-center mt-2 max-w-xs italic", style: { color: "#C9971F" } }, current.hint)))),
                     !flipped ? (React.createElement("button", { onClick: () => setFlipped(true), className: "mt-8 font-mono text-xs tracking-widest px-5 py-2 rounded", style: { background: COLORS.ink, color: COLORS.paper } }, "REVEAL")) : (React.createElement("div", { className: "mt-8 flex gap-3" },
                         React.createElement("button", { disabled: answered, onClick: () => handleFlashKnow(false), className: "font-mono text-xs tracking-widest px-4 py-2 rounded border", style: { borderColor: COLORS.rust, color: COLORS.rust, opacity: answered ? 0.5 : 1 } }, "DIDN'T KNOW"),
                         React.createElement("button", { disabled: answered, onClick: () => handleFlashKnow(true), className: "font-mono text-xs tracking-widest px-4 py-2 rounded", style: { background: COLORS.pine, color: COLORS.paper, opacity: answered ? 0.5 : 1 } }, "KNEW IT"))))),
@@ -617,7 +788,7 @@ function App() {
                         match.batches.length),
                     React.createElement("div", { className: "grid grid-cols-2 gap-6 w-full" },
                         React.createElement("div", { className: "flex flex-col gap-2" }, match.leftOrder.map((id) => {
-                            const s = STATES[id];
+                            const s = pack.pairs[id];
                             const isMatched = match.matchedIds.has(id);
                             const isSelected = match.selectedState === id;
                             const isWrongFlash = match.flashWrongIds && match.flashWrongIds[0] === id;
@@ -631,7 +802,7 @@ function App() {
                             return (React.createElement("button", { key: id, disabled: isMatched, onClick: () => selectState(id), className: "font-mono text-sm py-3 px-3 rounded text-left min-h-[48px]", style: { background: bg, color: isMatched ? "#C7D0E0" : isWrongFlash || isSelected ? COLORS.paper : COLORS.ink, opacity: isMatched ? 0.35 : 1 } }, s.name));
                         })),
                         React.createElement("div", { className: "flex flex-col gap-2" }, match.rightOrder.map((id) => {
-                            const s = STATES[id];
+                            const s = pack.pairs[id];
                             const isMatched = match.matchedIds.has(id);
                             const isSelected = match.selectedCapital === id;
                             const isWrongFlash = match.flashWrongIds && match.flashWrongIds[1] === id;
@@ -648,9 +819,9 @@ function App() {
                     React.createElement("p", { className: "font-mono text-xs tracking-widest mb-1", style: { color: "#C9971F" } }, "LOCATE & TYPE THE CAPITAL OF"),
                     React.createElement("h2", { className: "font-display text-3xl text-center mb-3", style: { color: COLORS.ink } }, current.name),
                     React.createElement("div", { className: "relative w-full rounded mb-4 overflow-hidden", style: { background: "#C7D0E0", border: "1px solid #9FB3D1" } },
-                        React.createElement("svg", { viewBox: MAP_VIEWBOX, className: "w-full h-auto block" }, STATES.map((s) => {
+                        React.createElement("svg", { viewBox: pack.mapViewBox, className: "w-full h-auto block" }, pack.pairs.map((s) => {
                             const isTarget = s.id === current.id;
-                            return (React.createElement("path", { key: s.id, d: STATE_PATHS[s.id], className: isTarget ? "pulse-state" : "", fill: isTarget ? COLORS.rust : "#8FA3C4", stroke: isTarget ? "#fff" : "#5C7299", strokeWidth: isTarget ? 2 : 1 }));
+                            return (React.createElement("path", { key: s.id, d: pack.statePaths[s.id], className: isTarget ? "pulse-state" : "", fill: isTarget ? COLORS.rust : "#8FA3C4", stroke: isTarget ? "#fff" : "#5C7299", strokeWidth: isTarget ? 2 : 1 }));
                         }))),
                     React.createElement("form", { onSubmit: handleTypeSubmit, className: "w-full flex flex-col items-center gap-3" },
                         React.createElement("input", { ref: inputRef, value: typed, onChange: (e) => setTyped(e.target.value), disabled: !!feedback, placeholder: "Type the capital...", className: "w-full font-mono text-sm px-4 py-3 rounded outline-none", style: { background: "#fff", border: `2px solid ${feedback === "right" ? COLORS.pine : feedback === "wrong" ? COLORS.rust : "#C7D0E0"}`, color: COLORS.ink } }),
@@ -679,7 +850,7 @@ function App() {
                     React.createElement("span", { className: "font-mono text-[10px]", style: { color: COLORS.brass } },
                         progressPct,
                         "%")),
-                React.createElement("div", { className: "grid grid-cols-10 gap-1" }, STATES.map((s) => (React.createElement("div", { key: s.id, title: s.name, className: "h-3 rounded-sm", style: { background: stamped.has(s.id) ? COLORS.rust : COLORS.panelBorder, opacity: stamped.has(s.id) ? 1 : 0.6 } }))))))));
+                React.createElement("div", { className: "grid gap-1", style: { gridTemplateColumns: `repeat(${Math.min(pack.pairs.length, 10)}, minmax(0,1fr))` } }, pack.pairs.map((s) => (React.createElement("div", { key: s.id, title: s.name, className: "h-3 rounded-sm", style: { background: stamped.has(s.id) ? COLORS.rust : COLORS.panelBorder, opacity: stamped.has(s.id) ? 1 : 0.6 } }))))))));
 }
 function LevelSummary({ correct, total, pct, threshold, alwaysPass, reviewMode, onRetry, onExitReview, onContinue, isLast }) {
     const thresholdPct = Math.round(threshold * 100);
@@ -706,17 +877,19 @@ function LevelSummary({ correct, total, pct, threshold, alwaysPass, reviewMode, 
                 " to advance"),
             React.createElement("button", { onClick: onRetry, className: "font-mono text-xs tracking-widest px-5 py-3 rounded", style: { background: COLORS.rust, color: COLORS.paper } }, "RETRY LEVEL")))));
 }
-function StudyList({ onBack }) {
-    const sorted = [...STATES].sort((a, b) => a.name.localeCompare(b.name));
+function StudyList({ onBack, pairs, title }) {
+    const sorted = [...pairs].sort((a, b) => a.name.localeCompare(b.name));
     return (React.createElement("div", { className: "min-h-[100dvh] w-full flex items-start justify-center py-8 px-4", style: { background: COLORS.ink, fontFamily: "'Inter', sans-serif" } },
         React.createElement("div", { className: "w-full max-w-2xl" },
             React.createElement("div", { className: "flex items-center justify-between mb-5" },
-                React.createElement("h1", { className: "font-display text-3xl", style: { color: COLORS.paper } }, "Study List"),
+                React.createElement("h1", { className: "font-display text-3xl", style: { color: COLORS.paper } }, `${title} \u2014 Study List`),
                 React.createElement("button", { onClick: onBack, className: "font-mono text-[10px] tracking-widest px-4 py-2 rounded", style: { background: COLORS.panel, color: COLORS.sage, border: `1px solid ${COLORS.panelBorder}` } }, "BACK")),
             React.createElement("div", { className: "rounded-lg p-4", style: { background: COLORS.paper, border: `1px solid ${COLORS.panelBorder}` } },
-                React.createElement("div", { className: "grid grid-cols-1 divide-y", style: { borderColor: "#C7D0E0" } }, sorted.map((s) => (React.createElement("div", { key: s.id, className: "flex items-center justify-between py-2 font-mono text-sm", style: { color: COLORS.ink, borderColor: "#C7D0E0" } },
-                    React.createElement("span", null, s.name),
-                    React.createElement("span", { style: { color: COLORS.rust } }, s.capital)))))))));
+                React.createElement("div", { className: "grid grid-cols-1 divide-y", style: { borderColor: "#C7D0E0" } }, sorted.map((s) => (React.createElement("div", { key: s.id, className: "py-2", style: { borderColor: "#C7D0E0" } },
+                    React.createElement("div", { className: "flex items-center justify-between font-mono text-sm", style: { color: COLORS.ink } },
+                        React.createElement("span", null, s.name),
+                        React.createElement("span", { style: { color: COLORS.rust } }, s.capital)),
+                    s.hint && React.createElement("p", { className: "font-mono text-[11px] italic mt-1", style: { color: "#8A7A3A" } }, s.hint)))))))));
 }
 
 ReactDOM.render(React.createElement(App), document.getElementById("root"));
