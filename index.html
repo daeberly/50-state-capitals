@@ -235,7 +235,8 @@ function triggerIOSHaptic() {
 document.addEventListener("click", function (e) {
     const t = e.target;
     const isTextEntry = t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA");
-    if (!allowIOSHaptic && !isTextEntry) {
+    const isLink = t && t.closest && t.closest("a");
+    if (!allowIOSHaptic && !isTextEntry && !isLink) {
         e.preventDefault();
     }
     allowIOSHaptic = false;
