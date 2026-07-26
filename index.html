@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>Field Atlas</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Field Atlas" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="theme-color" content="#1e2a22" />
+<link rel="apple-touch-icon" href="data:image/png;base64,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" />
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAACXBIWXMAAAsTAAALEwEAmpwYAAAgAElEQVR4nO19aXQU15m27Jwz39+ZfP++oUt0SUB3ad93oQUktCChHbGITQubWAwIDAiQBEiAhNjBrMYYiG3ABhtvcbzbJOCdOBk7drzNlsmXzPybTHKSd85zRbeqW93qruquvlWt6nOeg+iuW3Xr3qduvfddIyJC8/nRpBhrmkUSOwS7OGSRrLctdvFXFrv4nWAX/yhI4t8ESSQThh6Dv2EuMadsbiXr7ZG5FjsssWIqOBBh5M8kadKPLXZxhWAXb1kk8b90MOAmJH5jYLGL/ynYxZsgOLgRYZDPQ5F2sdwiWW9Y7Nb/MUlkPkSCJ3JL1j9Z7NbrkXaxDJyJ0OHnYUuMdbZgt94zSWySWFA2Bp9ZbFEtuhFJLHZrHjplEtkkshCYSPKJEBOVzY3I/89m+7+C3XrB3NCZRBaCuLG0SOK5kMvYkyRrukUSf2uuyiaZBS3GwG79XogRc0JCZsEubhLs1r+YZDbJLGiqFbH+OVKybtCSyz8SJOtJk8gmkYXQjsFxKB2CyuTo6Oj/Y7GLz5hkNsks8BmDpyVJ+rtg8flhnNAks0lmgesYWJ8NimrPIlkPm2Q2ySzoYgysJwMis2AXu/jfhAlzDETnGKjeKP6jfXIGdprmYJoPlKCnMYCGTalK74HR5HvunTdhjoE0dgwskvitIuPLAwugOZjmGJBex8AiiWf8IrNFEnNNczb/CTMh+hqDv0baorJ88flHpqORSSbBIGNgkawfjWt0mWQT5/LupAlzDAQlYxBjrfPG54cskvVDk1AmoQQDjYHFLn7sMUgAkSa8O2fCHANBxRhMkqJmedgMWm+YhFJHKDEuitKyJJoxI5GqKlNpXn0mtc/PpRUL82jd0gIX4Dv8hmNwLNqgrTU2ynygJdUP9NNjA1ol659MQo8/cFHx0VRQFE8L6jNpS0cxHXm0kn7SX08vHZlHLx8NDC8daWbnwjlxblwD18I1zXkRxxc7JPG/IxMi/350dUZ0tvm6GzNQU+Kn0OyyFNrQWkgnt8+m24ebAyauUuCaJ7ZVsT5UlqWwPplzJXoYg8ltTkIj1YA5SCMDk5Bmo6XNOTS8uYJeOBQcAt8+MoJgnAt9OthVQUvmZlN8us0kt+TYHFqvO3XPLGfCBF6h7UlTaXFTFh3bNpu9+v0l1pmdc6h3bSmtXTKdiQjls5IpvyCeEjPsNC3J+0qK35Iy7OxYtEFbnAPnwjn9fROgr0e3VlJLYzbZkqZyH0eeAIeZeykyGvHuDC9gQ9azpoSeH57rkzjnds2hR5cXU2NNBmXmxpA1xv/rJCVEM/h7PM6NazTVpNPWFTPofE+NzwcN97Br9UwqKk7gPq7cYItKgfy8nHtHQghoExqq0+n0jupxCfLM/kZGkPqqNJKS1a9+2YlT6FxpHAP+VnuemJSprN94AK/tbxy374/tqGb9VvLQhQcmt0F+Psi/I6Eh8sKGLLrSX+eVCNcHG2n7ihlUWpJEk4OkRqtLn0qPl8Yx4O+g3EuMSGUlydS9cgbdGPRO7it765g4M1FUghZJPAD9823eHdESkTFRNLcmgy7v9UxkqNwOP1rJVjTok4N9fS0ILQfUevXV6eweXvKy8by0p46JLxgL3vOhKeziLWQ++px7RzSUkbHJ8iZzQj5Nz47RtA9aE1qO9OwY2ray2OueAKJIeMvY1vvwff6Bf0eCi9jUadS3ttTjpN482ERrFk9nMmko+hJKQgsPEJMyjdYuLaDnDo4lNlZxaFNiU6Zxn6dgA6l8I8Ip1W1kjEjNtZke5UqsWo8sKyQpRETmSWjhAfDQbmgt8LhiY7/QXJvBxoz3vAUNdvGPEeGSBSk+zcYMDp5WJKzWiel2Lv3iSWjhAaDz3rPO8xtrqKucvdF4z19QYLf+JYJ7J4IAOPlcOzB2Vb7QW0PFxYlc+6YHQguyPcXjfTUeVZSzy1O5z2MwYGhCQx3V1V48ZoJgaVu1KF8TrYWRCS088AzEHsKTNXJDW6HhddeGJXRcqo2ObZ09ZlJgVcvOi+NLmoSpZEuLobjsRFo0I9lJaPyN7/AbjuHZx5z8WPYGcx8/ePsZecNoSELn5McxV0t3WRmrdajcLa3xUyhjZjbNmltOzavm08odq2jboe00+MQgDV8ZZv/uPdtPQ10tTkLjb3wnPwZt0BbnwLnSZ2TR5LjQ3EN0/BTmqjrGINNfT9l5sdzneUIQGhay54aaXCYA6qma2WmaXheWw/SZ2VTf1kjrdq+n/Rf3087ju2j1rjU0f/VCKp83m7JKc8mWHkuTY6N9ihw4BseiDdrO71zIzoVz4ty4Bq6FhyZYVkvBC+qq0+jm8NgxrShL5j7fYU1oWPzc3TAv9tVQRo42xhFY1nIrplP7lg7ad2Ef7TrRQ8u6WqmksYzs6XGaydBSRjy7RmtXG+06sYtdu21LB+uLVta+rNxYuri71nUvcmQeszDynvewJDR8Etw9zuDuqYVeOSk/leZ1LqDex/pox9Gd1NDeRPE5Sdw2hbh2Y8dc2nFsJ/We6qN5qxdQYn7wtRK2pKlMhnYX5RY3ZXOf/7Ai9LLmnDF+CvCEC7bTTWZJDq3tXUf95/tp8YallFGSrTstB/qEvqGPa3rWsj4HWwvS62Zlxdgj6IE3D8KC0M11mWPIDL/kYL56Icd29q6hvWf3UtPyZopOtulebRedOI2qF9dQ32N9tGl/FxVUFwft3LAebmorGkPqlsYs7nwwNKFhmnUnMyKng3X+5MJ0Robek700u6WaaS6MpoeG+q+qpYbdw4aBjZRckBY0UsNVwJXUzSzAgTcvDElohCa5bwA3thYG5dzRSTZauHYRDVwYoJpl9S5aCaMaVqDqq1vWQPvO76MFa1soKjE4umQsIO4bRWiaePPDUITGjvvZQVc10paOoqCce2ZDKXtNQ/cbkxGv+b3Upo0SGn9rfb2YrARavaOT+k7tphl1pUFZqd111fBY5G28MgyhYQF0N5r0dJYE7BUGmbP90Q7qOdFD+bODJ7b4QnJCNJ2cGcuAv0N13fyqQiaGQN0XlRDYao39ivtGEcYXPVoUdUVoaC3c1Ub4f6A+GVBxwSIHw8XUZCn09xUzglBfNzrJRiu6V9KOozsopSA94Lk57DY3x7dX6S68S1eEdnc0gtEk0PD88vmzmaxctWgO9/vjgciYKKYNwRiUzasM6FwIFn7CzfiCBDi871GXhK6uSBljekUofyATuaBzIRMx0oozud8fb6QXZzERBGb6QFSeCPOCDC2fKz25nkboxTlf7s8MVV0gvhnQWsBEvf1wN0mZ+ty88IAtPZa2Dm9lpvxANDvw/XD3p8beh/f96YLQ2Oy5R5pA9FB7PuiSV+1cTZsPbKZpKaGXl/WOKUl2pq+GISmQzSKMW/I5G9xUoYtwLu6ERlpZ9ygTtS6gmKCNA5vY5o+3v7Ec1rhoiorTT5JFMWEqGyMQW+04YY7O9bhG1MN5bEITGrFs8oBWRFGo1W/CxRK+DZgord0tlaJmbhW115dw74fgNl4YK6zUascLQQLyyBeIjYg4n7CEdk81sHrRdFXnwSandXM7de3fHLDOVQscO9ZPp5fXce+H4AaszliloZ9Xu1HsXDzd1WawpmRiErqoKMHFTwMqOrWiBrQZ0DPz0DH7Aojy+Uev0+XGPJqsw8xF0Uk2tlGE9kNNe9gI5KFcmFOegckRvCZZntEokEGAnhmqOX8d7kON8ppZ9Id/vs9M3/Or9KWzFWQBBVDplTVXqGo/c0aiyyp9akc1t7RjXAiNzYN8ACB6qDkPPMvgF6xnPfOBoV1OQp/oqOfeH8ELMIZwbIIHopr2e9fPcplTXl55ISc0TKVIHui4cWT1QYJwpeeBrNx9pJu5TvImw3j46M7LTkJfnafPFVp4gDlLalmEjhpPveRMySVDE+aYh1k85IRGSlv5k7xepX8znG46e9boOqNmUXkBI7OD0EBNWR73fglegLGEpx422Graw71XPrcIzghrQuOJlednhglVTUwgXEAhN8NIwJsE42FP/9YxhD7SoT9thyADNtaQp4vrlGsr4H0njx5HCuNQO2WFlNDIQC9/gpHBR+k58DqEr+/06uD4R2uJO2/fGkPoqy360kcLHpBfWUi7T+9mGhClbfHGlc9xXZW26SW4Elqu2YC8pWZ1blm3mFZ2r+I+6b6QVZzlJLOc0EDZDP1uYoUHWLWzk6lDlbaDYUUuS0PjEZaERqJA+ZOLZONqtBrYiSMqg/eE+0L3rg1eCT3Upm+xQwAxM+NVaz1QKkM+17A5hB2hEXUi1zuryZyPgFbEAPKebH/wxqvXvBL66pJy7v0T/EBdawNt6N+ouB0S/8iNZjtXl4QXoW2JU+mWbLNwaItyR/O8ygK2WdEyoDVYSMlLo99//6lXQj8+K54Kp+vHh1gYJ/AWiW1yyvMVt5VHHkEECVUdxZAQGoUhXTYK1co3CvA5QKoB3pPsDzZu6XQh8xhCl8ZRf2st934KfgDRLuv3PKK4XcMcVwUA1LVhQ2h52lt4ZCmNEUSSxD2n9+jKJXQ8vPzCZZ+EvrIssHCoUMEaP4VpPJRmaIJfzo2hUU9KrNhhQWjUzpbnpFOzGUR6rjlL9b+RAuIzE+h3333qk9AXy+IpM4dvdQHBTyDfB9xMlbbbsXqmbN/UHJLa5JoTGjnR5K8eFLVUmjix/1w/S0PAe2L9Qecj7WPI7InQQM8SYwTuRiVOYz4zCXkpitqVz0pymXvUUzc8oYc3V7jEnim1HCEL6OJHlnKfVH/x7PXzfhP6cnsV9/4KfmLpplaWlF2pZVgeK4oCRYYm9JT4KfTCoWaXjKGKE5yc6mMyNO8J9Qe2FIn+7bcf+k3oJyqSKTHdGJnys0pzmZZJqe+MPEENtB2oGmBYQiO8Xf7KQQlfpao65ETWswOSHO2rFnkkszdCA1tbZnPvt+AHMAeoLpCt0LkKbqRyDpRrXBVAU0IjCYl8U6DU1I1w+4aOJu6T6S+uXj6pmNBPdBhDfSdIIks1jKoCSh2W5EYWZDQ1LKFPdlc5b+TcLmUbIARuohSD2sz5oUZ0wjT64cu7igl9qSqNbIn6yGkh+AA2hdgcKjVuyUO0kD7MkISGHlIeEYw8DkraQ25GTRPek+gvFi5r9krm8QgNrFcZ+sQDvSd7FUcIbV8x6tuBPZWWlco0I3RBUXxAITmoALVsUyv3CfQXj184rJrQj+vcR1qQoXVLO9W21gcUcldQGG88QqN8gfwmlFaqgrl1ZuMs7hPoD8S4aPrq8/dUE/pyTSZFh6g2oRAgUEtxbd96RW2y8mJduDC/Lst4hJYnycZrRon+GU4xqNVnlLx0jQtrxyWzzxW6NI5WNAaenFwIUYQ45kZJcVDoo+XiZyCp3rgRWu5tBcd+JW1RbBLqOt6T5y9OntwfMKHPGEjs2Hl8F8tmqqTN2V2jwR3IM204Qsuz8EO5rvS1hjRVvCfOH2DH/8VnbwVM6Cv1OSwHHu/7EfwA/DpKm5RZ/XbLDCyIKzUUoeFNJ3dIWrNEWewgTKxqM/mEGlUNFT7J7A+hgUU12r2KhSBi4ZoWmrtinupYwxcPN2uW4kATQqdlSwFtApAON9Bs86HCoUN9QSP0qeXGiMapmF/FSl0EoiRIybQbh9Du8YPwulLSHonKg10hVSt8+sFrQSP0lbnqklWGGtmz8mjroW2K2sDkLeeEVvnvNCH0nEpXH4686cq0FYNPDJItTf9OOyVVM/wis7+EBhor9U9qe3oc03QoaTO9wNUugRIkhiE0Cs3LO68k1ReiUoavDOsux7Mn7NvXPS6JESi7tGMhZRRmUlx8FJWlTqXdBdK4hD6u4/x3wgNAZYc5UlJ5FyJGKLIqaULotvm5Lp2fmuj/jU9LjaEDFw9wnzR/cO+9F72S+cTxAY8+DyjbsCLH5pXQVxcoj+jhgaFLQzQtVVIUKC3nROu8XOMQelVLvkvnlRhV4Iy058xe7hPmC3klueOuzOM58IDU463Us0v1v3/Ye66f4rKTFGm+5JxYvjDPOISWZ3WH+s7xfU7iFFYeeDwsKk6hoa5FPo9L0tDBxR/09G32SmiIGb7al6eOlkx2x3A7XyNLUny0z/HHHC0qSvZ5HObc8RDL3UjVpIHjRmj4vMrN3vgOZYHPl8T6vTnyBZQaFjlWXXrnjWe9Ehoys6/2CfHR3sWORfx8WMQYkY1tsOYJc+4oCS03f2vlF20SWuXAgXTeJjHej7dHdpFr7js53vrZdZPQko4IPRFEDogF3ggNbYav9m0rW7wSelfPJq73lmSKHBNvU1g+M9srobHhG68IJTaMb77mmvtOjrxS/SZFFybipjBQtR0MK7wnzB9AxeaN1FDNeSI1yHzyxIBXMv/i3dvc70vwAxNKbQffDXnnUX8jHA0rMIKMtyHqK5SYNgMbQOSLhpgx3soM9A9s535fggaGldQsV/+e5loDGVaqK1xN3/lhavqGmdrf3b6/JvIZlcVhafouKHQ1fVcZyfQ91jkpWbFzEhKb8J44f3C1uTBohP7s3mvc70fwA8jNodQ5qcLNOamoOMFA7qNurxf4doSr+yhcPoNF6IMHe7nfj+AHJpz7KJy3J4qDP5zyg0Xoyvoy7vcj+IEJ5+APXB2QhWCtCd8QLIRNXWnIDZjQX95/2xDVCYRghGDtNVgI1tgg2WrFQbIIxOQ9cf4CAa6BEhqqPN73IfgJJACacEGyWzqKXNMYKHjFGC2NAVIQBEro+vnGyBUtZcYFnMZgU1uR8Qjt7uSfmass0cy63euppNEYMiWSxDxZm6ma0F//6n2WrIb3fQj+JprpXaeoTbZbohktSyaHLBVYU0268lRgXQZKBeZD7BiP0OfPHeLef0FBjfXaZRMwFRhs9/Jk50prq4wkazSOHI2Ei2oJvWBJU1gna+xeGQbJGoGT20erX53vqQnrdLrTEqfRpep0xYT+4Tf3KDrM0+le7BtNp4uKaAZOeD6qe4ReOkZhwnO83hrajbN6IXm5UkJfvnSCe78FP9G0olmxGBib6prwfN3SAuMSurIsxUV2alBYkiK3YjpT3xmlJAXKSygldOuKFu79FvwA5gDqOqUlKbB3CiRHi66LBqHet5qiQRklxigaFJ8q0ROVyX4T+t+++YhsqcprnvNA1iyVRYPWhFHRIOBg12hZt2tqyrqtXkCLNxinrBtKtflL6BvPnOXeX8FPLN20jOauVGbuhv75+uBoWbfBTQYv6wYsmeta57usRJnnXSIKb57vZ8UfeU+qP0AxTX8JvXqdMdSS0Uk2lYU3XT3sUPPd8ISOS3UtjQwVjtJzrOldq1j3yQsZWfF0sTzBJ6FRPjkhyxilkevbGqmzJwilkdPCoDSye/H6G4ONivWQrHj9GeMUr0dhel+EfvHWk9z7KfiBqIRptPfs3oCL12vpvxFyQuNVE0gBTmBD/0aqalGmy+aF/tZan4TeuHkV934KfmDOklrmhqC0nXvBTaU+8bomNAIkbw03BfS0QoWHXbYSpxheyMlNpouzXMUOOZl///2nlJKXxr2fgg8gZrDv1G7Fqjrg6NZKF+0GOBA2hAZ2uchTyqtiARsGNlLdsgbuE+0Pri4p90ron73yNPf+CX4ARi28GZW2gyOa3JgCWTpUfQ4ZoZHgWv4K2rZSeTBo0vRU2nd+H8Vm638zNdRW55XQ23Y8wr1/gg/EZCWwsU4uUP4m6V410zV+sEib+EGuhHYvlQyDC8yiSs+xYG0LiznkPeG+MLM4wyuhkQaMd/8EH4BWQ00YHGp7Q8RwzPOpbm1LIXMldH1VmsuTu1ZhrCEAfTTkuoIq/Yf7X20pGUPo9968yb1fgg/kVxVS72N9FK1C9y/33wFqq9LCl9CwEiKezHGzzx2cq9hhCZhRV8o2iFOT/U9gwwNHZD7SDkL37dnCvV/COJiaIjF3g6Ia5XIv3rjyzf+lPXUhTxgUUkJ7imR5ZJk67yt44iFYU8+OSzVleWMIXVCm3xoqkTFRtGpnJ7V2talq39Ve5JYdSVl9d0MSGvZ9PLlylU6SghoscoX/9iPdVL1Y37rpq/NH0hyAzB/9/BXu/RHGwZyldSzJD8ZWaVvk2ZA7oj2xu1ax344hCe3JpXDPOnV1rh1aDz174514kP8OhN5/YAf3/ghegChu+Gsk5aeqaj+wflbAxjPDEhqvtsd2VLsMANKHqTkXMixBnkZRdd6k8IT5VYVOQs+qVuY+G8pI7t6TvSwAVk37kpIkl7mENmu8dMJhR2hHEK1c+Y4wHbWxZlAvbTu0XZebxMkxUXSlKZ9+9cmbupT3o5NttG14G8tWpTZ29ELvaIgV5lSrvHW6JjSAovbyJ1ttIRkQBaFBmw9sViX/aY3Ty+voyJE93PshuAHOXhsHNlH7ox2qHzaoXuVzCIswz3viSmgo4eUO4EhGkpOvLo0u1EPQeiCFmN5yS7fXl1BNk7bBoWrGa/WuTmZAUTteqBAsTyCDAA41atiwITSAxNfyJxyvL7VhOlhx4O8BUuvJ1TQqbgrLgce7H4JsnEBmrM5q32gIr3tcFs0NwMOO971xJzQ2D0Nd5S4Ds6WjOCAPMZjGIX5MS9GfTM0bU5LsjMh4mwUinm1fMZprAziwUfvwKkMQGohJmUZP728IKNOSHMgbgRg46FRjdKr94JV5f9vwNmaUCiTTKVRy8rl6Zn+jKr+csCW0I/5MrvW4OdxEWbnqy1JgkwPtB9RRSjNlhiMyZmYzkza0GYFoW5CnTm7expwhXQXv+9MdoYENraMVaJkqb3ctScmBycJlzRU0cGGARV7oUW2mNSJjoqhmSR0bA7V6ZgeklKkuVl4Aicx536NuCQ1TqTyvNIDIB+g6AzkvopWhp8ZGCM43PO6Lhxk4OtlGK7tX0Y6jO1T5NcsBG8GxbaOxocChLZVc7sswhHao8q70j2b/B6CvDnR1xQYIsiNEkOnV2uUndgfqXKN2NuCoeR0KFFQXs3uFo1GgunmMvTwDPwCvSd4qOkMQ2hHCI48YdqQ/CIY5tbiuhPlTw6sMURla3wvKODs87vC31teLzU5kbyK1LqDuwJg/urzYZS6eG2pisjRvnhiG0EBZaTLdlm0SgY2thUE5NxzXUfgGjk11rQ2aBt7WpY8SGn9rdR2oKxvam9g9ze9cGDSLqbzYj8P4NatUvxlhdUtoAIp6eZKaEf/pwqA5vkCuhCEG0RlwQ9XCGKM1oUFcbHjx1tnQv5F5IAbjvBhj9+gTzAUvL7qwILTDkihX5zmSpwdTY4EinzA07Dmzl5qWNzPjg94JjbcMHsLdp3fTpv1dTGYWgnRukLmr3VXMwByEKrdGWBMaWNqcM4bUyGoZqPbDHfCrBrHhF7xk4zKWLSjQByeYhEZf8PAt3dTK1HDww4B+OZhjEBUfPWYDiLFHjkLePAgbQgNYHdzFjxPbqjTZaUPNBwMEtATIT41VW2miwmASGtdGsnHkZ0afkAVUbX+EcWBPmuqSIMZB5sVNxjFMGYbQAMzh7htFGF8CsSj6WhGRNah1cztbtZkabEs7lc4t97vknBpCw1wPIwhTM57qY9eG+g190co4lJ0XN8Zogg2g3mVmQxMaKC1JomcHR02vjrhEVFrS8rrwfUCxnNrWelq7ex2r1YcVE6/9BZ0LWf1rEA7+EnI/CW+ExjE4Fm3QFueAuINz4txr+9azjKu4ptYVZuur05mrgXxMbx5sYu4IvOc77AkNQAfqbnwBoC/VOkO8AyAZfESwWkMEQDH3rYe20eATgzR8ZZj9u/dcPw11tTgJjb/7z/W7HANnIbTFOVBuGOcMVYnkKfFTWAYr93GE0URpXUm9wJCEdnjouZvJAfjoqg0SCKZOGK6rcdmJtKg4xUlo/I3v8BuO4dnHvOlxLtWpnObszRW6tACGPaEZcZiutHCMBgSyX+fi6ZrWw9ObYcVfRMVHs7ApeaSJY/OHClV6i/aZUIR2YHZZCvPJdV9tsALNVBlNHo6ELilJYpto93GCL7oR5WVPiBDs1r/w7kQwAAfzwU2jBYrk2Lt+FiVnShOW0CmZ9jF5MxwY3FjOHMJ4z19QYLf+JcIiif/FvSNBtHBB2yEPvJVrQja0FTLZe6IQOjZ1GkvPJc9o5MC1A40BRQXpEnbxj1ihf+DekSADpO1ZUzJGtnZEwkBWDNWqxIPQcak2ljNQHlkil5WRasDIGz9vsNjF7yIEyfpL3h3RCki0fcotQ5MDWLUQ6KmmkoBeCZ2ZG0Pdq2Z4XJEdGY2Q4If3vGgH6/0Ii2S9zb8j2gGWtYY56Sx5oKdJxooF9R+O0UIrorm3XXw0Ex3cTdYvu1lTUZaaV3qukMEu3ooQ7OJB7h0JkYqvuS6TntzjmdgAggpQTgH1qIMVWqQFoZHBFVoJ1C5xt5q+LANM2dhT6C1MSitYJPEANoUdvDsSSkDPiqzyKJXgjQiOTRNCv+CTHchGMjtxCp0rjWPA32rPA5kf5ISXoadNrxynuquoZnaa4XXKimGztkZYYsVU7h3hKGPvXF3iUhPEm1iCjE6QuUGqrLxYtkr6e52khGgGf4/HuWHex7UQegbrp6cNrhzYAO5YPTOkBXp0B1tUckRERMSPoO7g3hmOQA29hQ1ZTJZ2d1H1Bljazu6aw3yHoTVB+/KyZCoojGd6X1vSVI8rJL7DbzgGx6JNS2MWC3XCuXBOdyue9wetmfUZrrXTkrQxpcdlJNCMiiJKL8ig6ETtSxurhl38Q0RExMMgNOTom9w7JEPpnJn07uvP0X989+mDutif0Df/dMeJb7/4OUtPW14zix2HQpY4Dt/j/3DuOXSoj+5/8DNnKYgffnPP5Rz/8vUHdGBwJ7veG69eo9/++n123P//4TP69M5tunxolcvK/dqppfTD/Z/S77/98EHxzI/ph1++Rr/77V3696/v0Nf3btCdp7d7Jv+REbh/f+ep7exc399/xeX7e4aT2PEAAAcPSURBVM/uZuf/3Tf3GPC3s0b4Nx/Qv359l/7lq7v083eep5bWuXTn7VvO37/65bt088bjPsf4zZ9eY8c3t3iuoV5SNYONyyf3fkqXL51g5/z+i1/Qe2/cpMaFtdw54g6LXbwW4fhY7OJy3h3yBBAUg37ruYsu39tSYxihHf8HWXHctafOuhy3el2rc6IbFriWrtj0aKeT0AAmzVFU3vEdPPew+UIcI3JSQB323acvseP+9Yt3nQR87ydb6T++GSH652+c82t1Bb6+e93Zv7effMSF0L9+56JTvXj3p+ecx8VnjqjdsGK+/9ZIRa34zATn78eO9fscV5DVcfz1p8+N+X1qkp09GB//4hWKih/dyKZPT6cvPnuLjR1vbniUnx2fSdKkH1sk65+MQGhbisQGfPnqJaoIDTWelBZLhWUFbIUfj9CeVGTvvT5Cwq/vv8VKPF/pr6MXDzfTL18/47wWVl5fZH79bAdb2R1tfv3uJXYunHNoRwsN9Kyg6QXxLMzszJlB53H2tBFPwpi0ONqyba0qQp8+PURfff4eOx5vQRBV/ntlfdnIfbx9a0xAQef6Nq+rOi9YJPG/IxMi/95J6JFV2nrdCIR+5qnTY1ZbJYTGAyFf3ZUQGkBZYxz32b3XXDZxi5bUOK/16s1z1Dovhzrm5zL5Wg58h98undlLjx3dSe/+bOTV/89ffcBI6umanggthxJC29Ni6fOPXqeFS+c62wzs63Y5pra52vnbay8/Res3LqcsfecHfCrC/RNpF8v0SmjIbpCNAXynhtB4faI9Cl8Gm9AAqsM6V+i3b417DjEumsn3iTnJ7E3jaLd56xrNCb1xSycdPrKbrbyf3H2VtYEYIcaNbirx0EPkkFe/BXB8964Nusp1DUyKmVw6htBslZasH+qR0K++9BNGGOD5mxdVEXrFmmWsfVF5gSaExmvbca27790e9xxL2hfQlSdPsr+jE6Y5X/8fvP+ix5jBYBL65++8QPml+exvkNPRrnVFi8txOObZ6+fZhtyd2MePD3DnhgMWyfpRRETEQ54JbZ/cqHeRY1HbPMosylQtcmCTs2nL6qATumxOqfNaIMJ453jx1pPsmMGDPQwgsqMtXvdaEbq6sZJpcxzXPXfmoLPdK7eveGwDMQjiyYkT++iHL+86NUZ6yeQaaRNrIsb5PGyxi5/omdCeoEbLgY2hXC4cj9BQjfki9Pado6sdruutr7kzc+mjOy/TsuULnVizoYOpC9H26uWTQSV0dlEWFVeMpFC79MQx2rev2+XaeOM51JXTZ40UbUrNT6VDh3ePuU79/DnO6+hDJ239wKl79vYRYsQcQRL/Fu6Enre4gZ68dNwvQn/9q/fHJXRKXhp9/vEb7HusvpCRvfUV+vFHt68b8/3LL1x+cP1PKCknJWiEXrdhBVuNE7MT2WZQroYDaudWOdsePbqXfQdig+BVDRUej3WoCznjr5G2yMxxyTwqS4vneHY2rySXqZb+/dsRgwLIgv+XVM9wOQ4Dj+8dch42Wvg/XocbN6+iV1+86pwsGARANgcwKQ5CnzwxwAwIjpVKfhzw3Re/YLpvnPvL+2+PvHa/vMv+jxUOm9bf3H+H9vRvZTKxt/uCzAqjDuRnyPKO70GcN1+75vL6r5lbxX47cXyAPrwzovsGLpw/7CKWoO3FC0ecv3/+8RsufYc4c+OZs/TS85fZpm5XzyaXPg0N9bCHGG1xn8PDvZRRmMnuE8Yn3GPXo53UP7Cd/unTN1lfZs52nQcusFsfi/D3w/TSdvE7Xp2NTY9nK6o7ErKTxphlPR0HQs+oLPb4mxwOUtXNmzPucSAQVjZPv0GX7S7TewMqyTrvJSvRZYV3P29a/kiCclzb/Te53thT2wYPfXT8DVlf3qc5TZUux8rLz0FXv6itma3yKzqXMv10qFIsjAeLJH4jxAn/4DehR0htTbfYrf/Du/MmzDEQ5GS2W/8sxERlR6j5RErWDSahTEIJOhoDi01cFxHIR5Csh3jfhAlzDISRMTgREYTPwzAtmqQySSVwHQPrT3yq6Pz9SJL0d4IkPm2S2iS1wInM4GBEkD8PCXZxyCS1SWohlDKzXTwWtJXZ08ciWR9hO01zYk3ZXtKSyNY/B7wB9PczKcaaJtitX5ukNkktaLMqf6daNaea1CwoQDwLE6RJbJPYQnDG4K8Wu3hasdEkmJ9IW1QWXPhMUpukFgLb+H3wj/bJGRE6+TxkibHOFuziXZPYJrEFJWNgFz+12KJakH0gQoefhyZJUbMsdvEZxHmZ5DbJLXiSkUe48bTXSBM9fhC0KEiT2yyS9QZyJpjknuDktot/YHGrNmvrmIBWA34eRlabEYKLByx28XlkPbVI4rcPktyYG0vj46+YSzanyGhrF29hrjHnDzIaaadLln3+FxVD7q0TRDQrAAAAAElFTkSuQmCC" />
+
+<style>
+  html, body { margin:0; padding:0; background:#1e2a22; }
+  #root { min-height: 100vh; }
+</style>
+
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
+</head>
+<body>
+<div id="root"><div style="color:#EDE4D3;font-family:sans-serif;text-align:center;padding-top:40vh;">Loading Field Atlas…</div></div>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef } = React;
+
+const STATES = [
+  ["Alabama", "Montgomery"], ["Alaska", "Juneau"], ["Arizona", "Phoenix"],
+  ["Arkansas", "Little Rock"], ["California", "Sacramento"], ["Colorado", "Denver"],
+  ["Connecticut", "Hartford"], ["Delaware", "Dover"], ["Florida", "Tallahassee"],
+  ["Georgia", "Atlanta"], ["Hawaii", "Honolulu"], ["Idaho", "Boise"],
+  ["Illinois", "Springfield"], ["Indiana", "Indianapolis"], ["Iowa", "Des Moines"],
+  ["Kansas", "Topeka"], ["Kentucky", "Frankfort"], ["Louisiana", "Baton Rouge"],
+  ["Maine", "Augusta"], ["Maryland", "Annapolis"], ["Massachusetts", "Boston"],
+  ["Michigan", "Lansing"], ["Minnesota", "Saint Paul"], ["Mississippi", "Jackson"],
+  ["Missouri", "Jefferson City"], ["Montana", "Helena"], ["Nebraska", "Lincoln"],
+  ["Nevada", "Carson City"], ["New Hampshire", "Concord"], ["New Jersey", "Trenton"],
+  ["New Mexico", "Santa Fe"], ["New York", "Albany"], ["North Carolina", "Raleigh"],
+  ["North Dakota", "Bismarck"], ["Ohio", "Columbus"], ["Oklahoma", "Oklahoma City"],
+  ["Oregon", "Salem"], ["Pennsylvania", "Harrisburg"], ["Rhode Island", "Providence"],
+  ["South Carolina", "Columbia"], ["South Dakota", "Pierre"], ["Tennessee", "Nashville"],
+  ["Texas", "Austin"], ["Utah", "Salt Lake City"], ["Vermont", "Montpelier"],
+  ["Virginia", "Richmond"], ["Washington", "Olympia"], ["West Virginia", "Charleston"],
+  ["Wisconsin", "Madison"], ["Wyoming", "Cheyenne"],
+].map(([name, capital], i) => ({ name, capital, id: i }));
+
+// Schematic (not-to-scale) capital positions for the field-map level, % of box
+const POS = {
+  0:[63,60],1:[6,88],2:[22,58],3:[55,52],4:[8,45],5:[32,42],6:[86,28],7:[82,36],
+  8:[74,78],9:[68,62],10:[13,97],11:[20,22],12:[58,38],13:[61,38],14:[53,32],
+  15:[42,42],16:[62,44],17:[54,66],18:[89,10],19:[79,38],20:[87,24],21:[61,26],
+  22:[51,18],23:[59,58],24:[51,42],25:[27,14],26:[42,32],27:[14,38],28:[87,20],
+  29:[82,32],30:[28,56],31:[80,22],32:[74,50],33:[41,12],34:[65,36],35:[44,54],
+  36:[10,20],37:[76,30],38:[88,27],39:[72,56],40:[41,20],41:[62,50],42:[42,68],
+  43:[19,38],44:[85,17],45:[76,42],46:[12,8],47:[71,40],48:[55,24],49:[29,26],
+};
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function normalize(s) {
+  return s.trim().toLowerCase().replace(/^(st\.?|saint)\s/, "saint ").replace(/[^a-z ]/g, "");
+}
+function makeDeck() {
+  return { order: shuffle(STATES), pos: 0, correct: 0, total: 0, finished: false };
+}
+function makeMatch() {
+  const shuffled = shuffle(STATES);
+  const batches = [];
+  for (let i = 0; i < 50; i += 10) batches.push(shuffled.slice(i, i + 10));
+  return {
+    batches, batchIndex: 0,
+    matchedIds: new Set(), wrongPairs: new Set(), correctFirstTry: 0,
+    selectedState: null, selectedCapital: null, flashWrongIds: null,
+    leftOrder: shuffle(batches[0].map((s) => s.id)),
+    rightOrder: shuffle(batches[0].map((s) => s.id)),
+    finished: false,
+  };
+}
+
+const LEVELS = [
+  { key: "flash", label: "Flash Cards" },
+  { key: "choice", label: "Multiple Choice" },
+  { key: "matching", label: "Matching" },
+  { key: "map", label: "Map Fill-In" },
+  { key: "blank", label: "Fill in the Blank" },
+];
+const GRADE_OPTIONS = [
+  { value: 1.0, pct: 100, grade: "A+" },
+  { value: 0.9, pct: 90, grade: "A" },
+  { value: 0.8, pct: 80, grade: "B" },
+  { value: 0.7, pct: 70, grade: "C" },
+];
+
+const COLORS = {
+  ink: "#1e2a22", paper: "#EDE4D3", paperAlt: "#DDD1B6",
+  rust: "#A0472D", pine: "#3A5A45", brass: "#B8935A",
+  sage: "#8FA68F", panel: "#25342A", panelBorder: "#3A4A3D",
+};
+
+const STORAGE_KEY = "fieldAtlasProgress_v1";
+
+function loadProgress() {
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch (e) {
+    return null;
+  }
+}
+function saveProgress(data) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (e) {
+    /* storage unavailable or full — fail silently */
+  }
+}
+function clearProgress() {
+  try {
+    window.localStorage.removeItem(STORAGE_KEY);
+  } catch (e) {}
+}
+function makeDeckFromSaved(saved) {
+  if (!saved) return makeDeck();
+  return {
+    order: saved.order.map((id) => STATES[id]),
+    pos: saved.pos, correct: saved.correct, total: saved.total, finished: saved.finished,
+  };
+}
+function makeMatchFromSaved(saved) {
+  if (!saved) return makeMatch();
+  return {
+    batches: saved.batches.map((batch) => batch.map((id) => STATES[id])),
+    batchIndex: saved.batchIndex,
+    matchedIds: new Set(saved.matchedIds),
+    wrongPairs: new Set(saved.wrongPairs),
+    correctFirstTry: saved.correctFirstTry,
+    selectedState: null, selectedCapital: null, flashWrongIds: null,
+    leftOrder: saved.leftOrder, rightOrder: saved.rightOrder,
+    finished: false,
+  };
+}
+
+function App() {
+  const saved = loadProgress();
+
+  const [levelIdx, setLevelIdx] = useState(() => (saved ? saved.levelIdx : 0));
+  const [unlockedUpTo, setUnlockedUpTo] = useState(() => (saved ? saved.unlockedUpTo : 0));
+  const [completed, setCompleted] = useState(() => new Set(saved ? saved.completed : []));
+  const [stamped, setStamped] = useState(() => new Set(saved ? saved.stamped : []));
+  const [passThreshold, setPassThreshold] = useState(() => (saved ? saved.passThreshold : 0.7));
+
+  const [deck, setDeck] = useState(() => (saved && saved.deck ? makeDeckFromSaved(saved.deck) : makeDeck()));
+  const [flipped, setFlipped] = useState(false);
+  const [choiceOptions, setChoiceOptions] = useState([]);
+  const [pickedChoice, setPickedChoice] = useState(null);
+  const [typed, setTyped] = useState("");
+  const [feedback, setFeedback] = useState(null);
+  const [stampBurst, setStampBurst] = useState(false);
+  const [answered, setAnswered] = useState(false);
+  const [match, setMatch] = useState(() => (saved && saved.match ? makeMatchFromSaved(saved.match) : makeMatch()));
+  const inputRef = useRef(null);
+  const didMount = useRef(false);
+
+  const levelKey = LEVELS[levelIdx].key;
+  const current = deck.order[deck.pos];
+
+  useEffect(() => {
+    if (!didMount.current) { didMount.current = true; return; }
+    if (levelKey === "matching") { setMatch(makeMatch()); return; }
+    setDeck(makeDeck());
+  }, [levelIdx]);
+
+  useEffect(() => {
+    saveProgress({
+      levelIdx, unlockedUpTo,
+      completed: Array.from(completed),
+      stamped: Array.from(stamped),
+      passThreshold,
+      deck: { order: deck.order.map((s) => s.id), pos: deck.pos, correct: deck.correct, total: deck.total, finished: deck.finished },
+      match: {
+        batches: match.batches.map((b) => b.map((s) => s.id)),
+        batchIndex: match.batchIndex,
+        matchedIds: Array.from(match.matchedIds),
+        wrongPairs: Array.from(match.wrongPairs),
+        correctFirstTry: match.correctFirstTry,
+        leftOrder: match.leftOrder, rightOrder: match.rightOrder,
+      },
+    });
+  }, [levelIdx, unlockedUpTo, completed, stamped, passThreshold, deck, match]);
+
+  function resetProgress() {
+    if (window.confirm("Clear all saved progress? This can't be undone.")) {
+      clearProgress();
+      window.location.reload();
+    }
+  }
+
+  useEffect(() => {
+    if (levelKey === "choice" && current && !deck.finished) {
+      const wrong = shuffle(STATES.filter((s) => s.id !== current.id)).slice(0, 3);
+      setChoiceOptions(shuffle([current, ...wrong]));
+      setPickedChoice(null);
+    }
+    if ((levelKey === "map" || levelKey === "blank") && !deck.finished) {
+      setTyped("");
+      setTimeout(() => inputRef.current?.focus(), 50);
+    }
+    setFlipped(false);
+    setFeedback(null);
+    setAnswered(false);
+  }, [deck.pos, levelKey, deck.finished]);
+
+  function stampState(id) {
+    setStamped((prev) => new Set(prev).add(id));
+    setStampBurst(true);
+    setTimeout(() => setStampBurst(false), 500);
+  }
+
+  function advanceDeck(correct) {
+    if (answered) return;
+    setAnswered(true);
+    if (correct) stampState(current.id);
+    setTimeout(() => {
+      setDeck((d) => {
+        const nextPos = d.pos + 1;
+        const nextCorrect = d.correct + (correct ? 1 : 0);
+        const nextTotal = d.total + 1;
+        if (nextPos >= d.order.length) {
+          return { ...d, pos: nextPos, correct: nextCorrect, total: nextTotal, finished: true };
+        }
+        return { ...d, pos: nextPos, correct: nextCorrect, total: nextTotal };
+      });
+    }, correct ? 350 : 550);
+  }
+
+  function finishLevel(passed) {
+    if (passed) {
+      setCompleted((prev) => new Set(prev).add(levelIdx));
+      setUnlockedUpTo((u) => Math.max(u, Math.min(levelIdx + 1, LEVELS.length - 1)));
+    }
+  }
+
+  function goToLevel(i) {
+    if (i > unlockedUpTo) return;
+    setLevelIdx(i);
+  }
+  function retryLevel() {
+    setDeck(makeDeck());
+  }
+  function nextLevel() {
+    setLevelIdx((i) => Math.min(i + 1, LEVELS.length - 1));
+  }
+
+  function handleChoice(opt) {
+    if (pickedChoice) return;
+    setPickedChoice(opt.id);
+    const correct = opt.id === current.id;
+    setFeedback(correct ? "right" : "wrong");
+    advanceDeck(correct);
+  }
+  function handleTypeSubmit(e) {
+    e.preventDefault();
+    if (feedback) return;
+    const correct = normalize(typed) === normalize(current.capital);
+    setFeedback(correct ? "right" : "wrong");
+    advanceDeck(correct);
+  }
+  function handleFlashKnow(knewIt) {
+    if (answered) return;
+    setFlipped(true);
+    setTimeout(() => advanceDeck(knewIt), 400);
+  }
+
+  function selectState(id) {
+    if (match.matchedIds.has(id)) return;
+    setMatch((m) => ({ ...m, selectedState: id }));
+  }
+  function selectCapital(id) {
+    if (match.matchedIds.has(id)) return;
+    setMatch((m) => {
+      if (m.selectedState == null) return { ...m, selectedCapital: id };
+      const correct = m.selectedState === id;
+      if (correct) {
+        stampState(id);
+        const wasWrongBefore = m.wrongPairs.has(id);
+        const matchedIds = new Set(m.matchedIds).add(id);
+        const batchDone = matchedIds.size === m.batches[m.batchIndex].length;
+        if (batchDone) {
+          const nextIndex = m.batchIndex + 1;
+          if (nextIndex >= m.batches.length) {
+            return {
+              ...m, matchedIds, selectedState: null, selectedCapital: null,
+              correctFirstTry: m.correctFirstTry + (wasWrongBefore ? 0 : 1),
+              finished: true,
+            };
+          }
+          const nb = m.batches[nextIndex];
+          return {
+            ...m, matchedIds: new Set(), selectedState: null, selectedCapital: null,
+            correctFirstTry: m.correctFirstTry + (wasWrongBefore ? 0 : 1),
+            batchIndex: nextIndex,
+            leftOrder: shuffle(nb.map((s) => s.id)),
+            rightOrder: shuffle(nb.map((s) => s.id)),
+          };
+        }
+        return {
+          ...m, matchedIds, selectedState: null, selectedCapital: null,
+          correctFirstTry: m.correctFirstTry + (wasWrongBefore ? 0 : 1),
+        };
+      }
+      const wrongPairs = new Set(m.wrongPairs).add(m.selectedState).add(id);
+      setTimeout(() => setMatch((m2) => ({ ...m2, selectedState: null, selectedCapital: null, flashWrongIds: null })), 500);
+      return { ...m, wrongPairs, flashWrongIds: [m.selectedState, id], selectedCapital: id };
+    });
+  }
+
+  const progressPct = Math.round((stamped.size / 50) * 100);
+  const deckPct = deck.total ? Math.round((deck.correct / deck.total) * 100) : 0;
+  const currentBatch = levelKey === "matching" ? match.batches[match.batchIndex] : null;
+
+  return (
+    <div className="min-h-screen w-full flex items-start justify-center py-8 px-4" style={{ background: COLORS.ink, fontFamily: "'Inter', sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap');
+        .font-display { font-family: 'Fraunces', serif; }
+        .font-mono { font-family: 'IBM Plex Mono', monospace; }
+        @keyframes stampDown {
+          0% { transform: scale(2.2) rotate(-14deg); opacity: 0; }
+          55% { transform: scale(0.92) rotate(-14deg); opacity: 1; }
+          75% { transform: scale(1.06) rotate(-14deg); }
+          100% { transform: scale(1) rotate(-14deg); opacity: 1; }
+        }
+        .stamp-anim { animation: stampDown 0.5s ease-out; }
+        @keyframes pulseDot {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(160,71,45,0.55); }
+          50% { box-shadow: 0 0 0 8px rgba(160,71,45,0); }
+        }
+        .pulse-dot { animation: pulseDot 1.4s ease-in-out infinite; }
+        @media (prefers-reduced-motion: reduce) {
+          .stamp-anim, .pulse-dot { animation: none !important; }
+        }
+      `}</style>
+
+      <div className="w-full max-w-2xl">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h1 className="font-display text-3xl" style={{ color: COLORS.paper }}>Field Atlas</h1>
+            <p className="font-mono text-xs tracking-wide" style={{ color: COLORS.sage }}>50 STATES &middot; 50 CAPITALS &middot; NO. 1848</p>
+          </div>
+          <div className="text-right font-mono" style={{ color: COLORS.brass }}>
+            <div className="text-2xl leading-none">{stamped.size}/50</div>
+            <div className="text-[10px] tracking-widest" style={{ color: COLORS.sage }}>STAMPED</div>
+            <button onClick={resetProgress} className="text-[9px] tracking-widest underline mt-1" style={{ color: COLORS.sage, background: "none", border: "none", padding: 0 }}>RESET PROGRESS</button>
+          </div>
+        </div>
+
+        <div className="rounded-md p-3 mb-5" style={{ background: COLORS.panel, border: `1px solid ${COLORS.panelBorder}` }}>
+          <div className="flex gap-1">
+            {LEVELS.map((lv, i) => {
+              const isLocked = i > unlockedUpTo;
+              const isDone = completed.has(i);
+              const isCurrent = i === levelIdx;
+              return (
+                <button
+                  key={lv.key}
+                  onClick={() => goToLevel(i)}
+                  disabled={isLocked}
+                  className="flex-1 flex flex-col items-center gap-1 py-2 rounded font-mono text-[10px] tracking-wide"
+                  style={{
+                    background: isCurrent ? COLORS.paper : "transparent",
+                    color: isLocked ? "#4A5A4D" : isCurrent ? COLORS.ink : COLORS.sage,
+                    cursor: isLocked ? "not-allowed" : "pointer",
+                  }}
+                >
+                  <span>{isLocked ? "\u{1F512}" : isDone ? "\u2713" : i + 1}</span>
+                  <span className="text-center leading-tight">{lv.label.toUpperCase()}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="rounded-md p-3 mb-5" style={{ background: COLORS.panel, border: `1px solid ${COLORS.panelBorder}` }}>
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-mono text-[10px] tracking-widest" style={{ color: COLORS.sage }}>PASS THRESHOLD</span>
+            <span className="font-mono text-[10px]" style={{ color: COLORS.brass }}>
+              Predicts a test score of {(GRADE_OPTIONS.find((g) => g.value === passThreshold) || {}).grade} or better
+            </span>
+          </div>
+          <div className="flex gap-1">
+            {GRADE_OPTIONS.map((g) => {
+              const isActive = g.value === passThreshold;
+              return (
+                <button
+                  key={g.value}
+                  onClick={() => setPassThreshold(g.value)}
+                  className="flex-1 flex flex-col items-center py-2 rounded font-mono text-[10px] tracking-wide"
+                  style={{ background: isActive ? COLORS.brass : "transparent", color: isActive ? COLORS.ink : COLORS.sage }}
+                >
+                  <span className="text-sm font-display">{g.grade}</span>
+                  <span>{g.pct}%</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="relative rounded-lg p-8 min-h-[380px] flex flex-col items-center justify-center" style={{ background: COLORS.paper, border: `1px solid ${COLORS.panelBorder}` }}>
+          {stampBurst && (
+            <div className="stamp-anim absolute top-4 right-4 rounded-full flex items-center justify-center font-display font-bold text-xs px-4 py-4 border-4" style={{ color: COLORS.rust, borderColor: COLORS.rust, transform: "rotate(-14deg)" }}>
+              STAMPED
+            </div>
+          )}
+
+          {levelKey !== "matching" && deck.finished && (
+            <LevelSummary
+              correct={deck.correct} total={deck.total} pct={deckPct}
+              threshold={passThreshold}
+              alwaysPass={levelKey === "flash"}
+              onRetry={retryLevel}
+              onContinue={() => { finishLevel(true); if (levelIdx < LEVELS.length - 1) nextLevel(); }}
+              isLast={levelIdx === LEVELS.length - 1}
+            />
+          )}
+
+          {levelKey === "matching" && match.finished && (
+            <LevelSummary
+              correct={match.correctFirstTry} total={50} pct={Math.round((match.correctFirstTry / 50) * 100)}
+              threshold={passThreshold}
+              alwaysPass={false}
+              onRetry={() => setMatch(makeMatch())}
+              onContinue={() => { finishLevel(true); if (levelIdx < LEVELS.length - 1) nextLevel(); }}
+              isLast={levelIdx === LEVELS.length - 1}
+            />
+          )}
+
+          {levelKey === "flash" && !deck.finished && current && (
+            <>
+              <p className="font-mono text-xs tracking-widest mb-3" style={{ color: "#8F7A4A" }}>WHAT IS THE CAPITAL OF</p>
+              <h2 className="font-display text-4xl text-center mb-2" style={{ color: flipped ? COLORS.rust : COLORS.ink }}>
+                {flipped ? current.capital : current.name}
+              </h2>
+              <p className="font-mono text-[10px] tracking-widest" style={{ color: COLORS.sage }}>{deck.pos + 1} / {deck.order.length}</p>
+              {!flipped ? (
+                <button onClick={() => setFlipped(true)} className="mt-8 font-mono text-xs tracking-widest px-5 py-2 rounded" style={{ background: COLORS.ink, color: COLORS.paper }}>REVEAL</button>
+              ) : (
+                <div className="mt-8 flex gap-3">
+                  <button disabled={answered} onClick={() => handleFlashKnow(false)} className="font-mono text-xs tracking-widest px-4 py-2 rounded border" style={{ borderColor: COLORS.rust, color: COLORS.rust, opacity: answered ? 0.5 : 1 }}>DIDN'T KNOW</button>
+                  <button disabled={answered} onClick={() => handleFlashKnow(true)} className="font-mono text-xs tracking-widest px-4 py-2 rounded" style={{ background: COLORS.pine, color: COLORS.paper, opacity: answered ? 0.5 : 1 }}>KNEW IT</button>
+                </div>
+              )}
+            </>
+          )}
+
+          {levelKey === "choice" && !deck.finished && current && (
+            <>
+              <p className="font-mono text-xs tracking-widest mb-3" style={{ color: "#8F7A4A" }}>CAPITAL OF</p>
+              <h2 className="font-display text-4xl text-center mb-1" style={{ color: COLORS.ink }}>{current.name}</h2>
+              <p className="font-mono text-[10px] tracking-widest mb-5" style={{ color: COLORS.sage }}>{deck.pos + 1} / {deck.order.length}</p>
+              <div className="grid grid-cols-1 gap-2 w-full">
+                {choiceOptions.map((opt) => {
+                  const isPicked = pickedChoice === opt.id;
+                  const isCorrect = opt.id === current.id;
+                  let bg = COLORS.paperAlt, txt = COLORS.ink;
+                  if (pickedChoice) {
+                    if (isCorrect) { bg = COLORS.pine; txt = COLORS.paper; }
+                    else if (isPicked) { bg = COLORS.rust; txt = COLORS.paper; }
+                  }
+                  return (
+                    <button key={opt.id} disabled={!!pickedChoice} onClick={() => handleChoice(opt)} className="font-mono text-sm py-3 rounded text-left px-4" style={{ background: bg, color: txt }}>
+                      {opt.capital}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
+
+          {levelKey === "matching" && !match.finished && currentBatch && (
+            <>
+              <p className="font-mono text-xs tracking-widest mb-1" style={{ color: "#8F7A4A" }}>MATCH EACH STATE TO ITS CAPITAL</p>
+              <p className="font-mono text-[10px] tracking-widest mb-4" style={{ color: COLORS.sage }}>SET {match.batchIndex + 1} / {match.batches.length}</p>
+              <div className="grid grid-cols-2 gap-6 w-full">
+                <div className="flex flex-col gap-2">
+                  {match.leftOrder.map((id) => {
+                    const s = STATES[id];
+                    const isMatched = match.matchedIds.has(id);
+                    const isSelected = match.selectedState === id;
+                    const isWrongFlash = match.flashWrongIds && match.flashWrongIds[0] === id;
+                    let bg = COLORS.paperAlt;
+                    if (isMatched) bg = "transparent";
+                    else if (isWrongFlash) bg = COLORS.rust;
+                    else if (isSelected) bg = COLORS.brass;
+                    return (
+                      <button key={id} disabled={isMatched} onClick={() => selectState(id)} className="font-mono text-xs py-2 px-3 rounded text-left" style={{ background: bg, color: isMatched ? "#c9baa0" : isWrongFlash || isSelected ? COLORS.paper : COLORS.ink, opacity: isMatched ? 0.35 : 1 }}>
+                        {s.name}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="flex flex-col gap-2">
+                  {match.rightOrder.map((id) => {
+                    const s = STATES[id];
+                    const isMatched = match.matchedIds.has(id);
+                    const isSelected = match.selectedCapital === id;
+                    const isWrongFlash = match.flashWrongIds && match.flashWrongIds[1] === id;
+                    let bg = COLORS.paperAlt;
+                    if (isMatched) bg = "transparent";
+                    else if (isWrongFlash) bg = COLORS.rust;
+                    else if (isSelected) bg = COLORS.brass;
+                    return (
+                      <button key={id} disabled={isMatched} onClick={() => selectCapital(id)} className="font-mono text-xs py-2 px-3 rounded text-left" style={{ background: bg, color: isMatched ? "#c9baa0" : isWrongFlash || isSelected ? COLORS.paper : COLORS.ink, opacity: isMatched ? 0.35 : 1 }}>
+                        {s.capital}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
+
+          {levelKey === "map" && !deck.finished && current && (
+            <>
+              <p className="font-mono text-xs tracking-widest mb-1" style={{ color: "#8F7A4A" }}>LOCATE &amp; TYPE THE CAPITAL OF</p>
+              <h2 className="font-display text-3xl text-center mb-3" style={{ color: COLORS.ink }}>{current.name}</h2>
+              <div className="relative w-full rounded mb-4" style={{ aspectRatio: "16/9", background: "#E2D6BC", border: "1px solid #c9baa0" }}>
+                <div className="absolute font-mono text-[9px] tracking-widest" style={{ top: 6, left: 8, color: "#8F7A4A" }}>UNITED STATES &middot; SCHEMATIC, NOT TO SCALE</div>
+                <div className="absolute" style={{ top: "78%", left: 0, right: 0, borderTop: "1px dashed #c9baa0" }} />
+                <div className="absolute font-mono text-[8px]" style={{ top: "80%", left: "2%", color: "#8F7A4A" }}>AK / HI INSET</div>
+                {STATES.map((s) => {
+                  const pos = POS[s.id];
+                  const isTarget = s.id === current.id;
+                  return (
+                    <div
+                      key={s.id}
+                      title={isTarget ? "?" : s.name}
+                      className={isTarget ? "pulse-dot" : ""}
+                      style={{
+                        position: "absolute", left: `${pos[0]}%`, top: `${pos[1]}%`,
+                        width: isTarget ? 12 : 5, height: isTarget ? 12 : 5,
+                        borderRadius: 999, transform: "translate(-50%,-50%)",
+                        background: isTarget ? COLORS.rust : "#a8967a",
+                        border: isTarget ? "2px solid #fff" : "none",
+                      }}
+                    />
+                  );
+                })}
+              </div>
+              <form onSubmit={handleTypeSubmit} className="w-full flex flex-col items-center gap-3">
+                <input ref={inputRef} value={typed} onChange={(e) => setTyped(e.target.value)} disabled={!!feedback} placeholder="Type the capital..." className="w-full font-mono text-sm px-4 py-3 rounded outline-none" style={{ background: "#fff", border: `2px solid ${feedback === "right" ? COLORS.pine : feedback === "wrong" ? COLORS.rust : "#c9baa0"}`, color: COLORS.ink }} />
+                {feedback === "wrong" && <p className="font-mono text-xs" style={{ color: COLORS.rust }}>Correct answer: {current.capital}</p>}
+                {!feedback && <button type="submit" className="font-mono text-xs tracking-widest px-5 py-2 rounded" style={{ background: COLORS.ink, color: COLORS.paper }}>SUBMIT</button>}
+              </form>
+            </>
+          )}
+
+          {levelKey === "blank" && !deck.finished && current && (
+            <>
+              <p className="font-mono text-xs tracking-widest mb-3" style={{ color: "#8F7A4A" }}>CAPITAL OF</p>
+              <h2 className="font-display text-4xl text-center mb-1" style={{ color: COLORS.ink }}>{current.name}</h2>
+              <p className="font-mono text-[10px] tracking-widest mb-5" style={{ color: COLORS.sage }}>{deck.pos + 1} / {deck.order.length}</p>
+              <form onSubmit={handleTypeSubmit} className="w-full flex flex-col items-center gap-3">
+                <input ref={inputRef} value={typed} onChange={(e) => setTyped(e.target.value)} disabled={!!feedback} placeholder="Type the capital..." className="w-full font-mono text-sm px-4 py-3 rounded outline-none" style={{ background: "#fff", border: `2px solid ${feedback === "right" ? COLORS.pine : feedback === "wrong" ? COLORS.rust : "#c9baa0"}`, color: COLORS.ink }} />
+                {feedback === "wrong" && <p className="font-mono text-xs" style={{ color: COLORS.rust }}>Correct answer: {current.capital}</p>}
+                {!feedback && <button type="submit" className="font-mono text-xs tracking-widest px-5 py-2 rounded" style={{ background: COLORS.ink, color: COLORS.paper }}>SUBMIT</button>}
+              </form>
+            </>
+          )}
+        </div>
+
+        <div className="rounded-md p-3 mt-5" style={{ background: COLORS.panel, border: `1px solid ${COLORS.panelBorder}` }}>
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-mono text-[10px] tracking-widest" style={{ color: COLORS.sage }}>TERRITORY STAMPED</span>
+            <span className="font-mono text-[10px]" style={{ color: COLORS.brass }}>{progressPct}%</span>
+          </div>
+          <div className="grid grid-cols-10 gap-1">
+            {STATES.map((s) => (
+              <div key={s.id} title={s.name} className="h-3 rounded-sm" style={{ background: stamped.has(s.id) ? COLORS.rust : COLORS.panelBorder, opacity: stamped.has(s.id) ? 1 : 0.6 }} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LevelSummary({ correct, total, pct, threshold, alwaysPass, onRetry, onContinue, isLast }) {
+  const thresholdPct = Math.round(threshold * 100);
+  const thresholdGrade = (GRADE_OPTIONS.find((g) => g.value === threshold) || {}).grade;
+  const passed = alwaysPass || pct >= thresholdPct;
+  return (
+    <div className="flex flex-col items-center text-center">
+      <p className="font-mono text-xs tracking-widest mb-2" style={{ color: "#8F7A4A" }}>LEVEL COMPLETE</p>
+      <h2 className="font-display text-5xl mb-2" style={{ color: passed ? COLORS.pine : COLORS.rust }}>{pct}%</h2>
+      <p className="font-mono text-xs mb-6" style={{ color: COLORS.ink }}>{correct} of {total} correct</p>
+      {passed ? (
+        <button onClick={onContinue} className="font-mono text-xs tracking-widest px-5 py-3 rounded" style={{ background: COLORS.pine, color: COLORS.paper }}>
+          {isLast ? "FINISH" : "CONTINUE \u2192"}
+        </button>
+      ) : (
+        <div className="flex flex-col items-center gap-3">
+          <p className="font-mono text-xs" style={{ color: COLORS.rust }}>
+            Need {thresholdPct}%{thresholdGrade ? ` (${thresholdGrade})` : ""} to advance
+          </p>
+          <button onClick={onRetry} className="font-mono text-xs tracking-widest px-5 py-3 rounded" style={{ background: COLORS.rust, color: COLORS.paper }}>RETRY LEVEL</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+ReactDOM.render(React.createElement(App), document.getElementById("root"));
+
+</script>
+</body>
+</html>
