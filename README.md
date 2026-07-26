@@ -90,17 +90,26 @@ Field Atlas isn't in the App Store, but adding it to your home screen takes abou
 
 ## Install it on Android
 
-You can add Field Atlas to an Android home screen too (Chrome's **⋮ menu → Add to Home Screen**), but the result is a bit different from iPhone: without a [web app manifest](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest) file, Chrome treats it as a plain bookmark shortcut rather than a standalone PWA, so it'll open inside a normal Chrome tab (with the address bar visible) rather than full screen. It still works fine for quick access — it just won't look quite as native as the iPhone version does. Adding a manifest.json would close that gap if that's ever worth doing.
+Field Atlas now ships a `manifest.json`, so Android gets a proper installable experience too:
+
+1. Open **[the app](https://daeberly.github.io/50-state-capitals/)** in **Chrome**.
+2. Tap the **⋮** menu → **Add to Home Screen** (or **Install app**, if Chrome offers it directly).
+3. Confirm the name and tap **Add** / **Install**.
+4. The app icon appears on your home screen and launches full screen — no address bar, same as iPhone.
+
+A couple of honest caveats:
+- The manifest gives Chrome everything it needs for standalone display (name, icons, `display: standalone`), but there's no service worker, so it won't work offline and may not trigger Chrome's automatic "install" banner on every device — the manual **Add to Home Screen** step above always works, though.
+- The icon isn't a dedicated "maskable" icon (no safe-zone padding), so depending on the launcher, Android may crop its corners into a circle or squircle rather than showing it exactly as designed.
 
 ## Running it yourself
 
-This is a single `index.html` file with no build step. To host your own copy:
+This is a static site with no build step — `index.html`, `manifest.json`, and two icon files (`icon-192.png`, `icon-512.png`). To host your own copy:
 
 1. Fork or download this repository.
-2. Upload `index.html` to a static host — the simplest option is **GitHub Pages**:
+2. Upload `index.html`, `manifest.json`, `icon-192.png`, and `icon-512.png` (all in the same folder) to a static host — the simplest option is **GitHub Pages**:
    - Repo → **Settings → Pages** → set Source to your branch, folder `/ (root)` → Save.
    - Your app will be live at `https://<your-username>.github.io/<repo-name>/`.
-3. Open that URL on your phone and add it to your home screen — see [Install it on your iPhone](#install-it-on-your-iphone) above for the exact steps.
+3. Open that URL on your phone and add it to your home screen — see [Install it on your iPhone](#install-it-on-your-iphone) or [Install it on Android](#install-it-on-android) above for the exact steps.
 
 The app pulls React and Tailwind from a CDN on first load (so it needs internet the very first time), then runs entirely client-side after that — no server, no database, no account required.
 

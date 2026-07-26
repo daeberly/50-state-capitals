@@ -1,0 +1,25 @@
+{
+  "name": "Field Atlas",
+  "short_name": "Field Atlas",
+  "description": "A five-level study app for learning all 50 U.S. states and capitals.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#102A54",
+  "theme_color": "#102A54",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
