@@ -627,10 +627,10 @@ function App() {
                 levelKey === "map" && !deck.finished && current && (React.createElement(React.Fragment, null,
                     React.createElement("p", { className: "font-mono text-xs tracking-widest mb-1", style: { color: "#C9971F" } }, "LOCATE & TYPE THE CAPITAL OF"),
                     React.createElement("h2", { className: "font-display text-3xl text-center mb-3", style: { color: COLORS.ink } }, current.name),
-                    React.createElement("div", { className: "relative w-full rounded mb-4 overflow-hidden", style: { background: "#E3E9F5", border: "1px solid #C7D0E0" } },
+                    React.createElement("div", { className: "relative w-full rounded mb-4 overflow-hidden", style: { background: "#C7D0E0", border: "1px solid #9FB3D1" } },
                         React.createElement("svg", { viewBox: MAP_VIEWBOX, className: "w-full h-auto block" }, STATES.map((s) => {
                             const isTarget = s.id === current.id;
-                            return (React.createElement("path", { key: s.id, d: STATE_PATHS[s.id], className: isTarget ? "pulse-state" : "", fill: isTarget ? COLORS.rust : "#C7D0E0", stroke: isTarget ? "#fff" : "#B9C4D6", strokeWidth: isTarget ? 2 : 1 }));
+                            return (React.createElement("path", { key: s.id, d: STATE_PATHS[s.id], className: isTarget ? "pulse-state" : "", fill: isTarget ? COLORS.rust : "#8FA3C4", stroke: isTarget ? "#fff" : "#5C7299", strokeWidth: isTarget ? 2 : 1 }));
                         }))),
                     React.createElement("form", { onSubmit: handleTypeSubmit, className: "w-full flex flex-col items-center gap-3" },
                         React.createElement("input", { ref: inputRef, value: typed, onChange: (e) => setTyped(e.target.value), disabled: !!feedback, placeholder: "Type the capital...", className: "w-full font-mono text-sm px-4 py-3 rounded outline-none", style: { background: "#fff", border: `2px solid ${feedback === "right" ? COLORS.pine : feedback === "wrong" ? COLORS.rust : "#C7D0E0"}`, color: COLORS.ink } }),
