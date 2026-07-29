@@ -215,7 +215,7 @@ function IsolatedMap({ pack, id }) {
         React.createElement("svg", { viewBox: box || pack.mapViewBox, className: "w-full h-full block" },
             React.createElement("path", { ref: pathRef, d: d, fill: COLORS.rust, stroke: "#fff", strokeWidth: 2 }))));
 }
-function MiniMap({ pack, highlightId, correctIds, tall }) {
+function MiniMap({ pack, highlightId, correctIds, missedIds, tall }) {
     const targetRef = useRef(null);
     const [marker, setMarker] = useState(null);
     useEffect(() => {
@@ -245,7 +245,10 @@ function MiniMap({ pack, highlightId, correctIds, tall }) {
                     return null;
                 const isTarget = s.id === highlightId;
                 const isCorrect = correctIds && correctIds.has(s.id);
+                const isMissed = missedIds && missedIds.has(s.id);
                 let fill = "#8FA3C4";
+                if (isMissed)
+                    fill = COLORS.orange;
                 if (isCorrect)
                     fill = COLORS.lightGreen;
                 if (isTarget)
@@ -439,7 +442,7 @@ const GRADE_OPTIONS = [
 ];
 const COLORS = {
     ink: "#102A54", paper: "#FFFFFF", paperAlt: "#E3E9F5",
-    rust: "#B3261E", pine: "#1F7A3D", brass: "#E8B923", lightGreen: "#8BC34A",
+    rust: "#B3261E", pine: "#1F7A3D", brass: "#E8B923", lightGreen: "#8BC34A", orange: "#E8862A",
     sage: "#9FB3D1", panel: "#122B57", panelBorder: "#28456F",
 };
 // --- sound + haptic feedback (feature-detected; harmless no-ops where unsupported) ---
@@ -782,6 +785,7 @@ function PackApp({ pack, onBackToPacks }) {
     const deckPct = deck.total ? Math.round((deck.correct / deck.total) * 100) : 0;
     const currentBatch = levelKey === "matching" ? match.batches[match.batchIndex] : null;
     const weakCount = Object.values(missCounts).filter((n) => n > 0).length;
+    const missedIds = new Set(Object.keys(missCounts).filter((k) => missCounts[k] > 0).map(Number));
     if (view === "study") {
         return React.createElement(StudyList, { onBack: () => setView("main"), pairs: pack.pairs, title: pack.title, mnemonic: pack.mnemonic });
     }
@@ -847,30 +851,30 @@ function PackApp({ pack, onBackToPacks }) {
                             React.createElement("span", null, isLocked ? "\u{1F512}" : isDone ? "\u2713" : i + 1),
                             React.createElement("span", { className: "text-center leading-tight" }, lv.label.toUpperCase())));
                     }))),
-                React.createElement("div", { className: "rounded-md p-3 mb-5", style: { background: COLORS.panel, border: `1px solid ${COLORS.panelBorder}` } },
-                    React.createElement("div", { className: "flex items-center justify-between mb-2" },
-                        React.createElement("span", { className: "font-mono text-[10px] tracking-widest", style: { color: COLORS.sage } }, "PASS THRESHOLD"),
-                        React.createElement("span", { className: "font-mono text-[10px]", style: { color: COLORS.brass } },
-                            "Predicts a test score of ",
+                React.createElement("div", { className: "rounded-md p-2 mb-5", style: { background: COLORS.panel, border: `1px solid ${COLORS.panelBorder}` } },
+                    React.createElement("div", { className: "flex items-center justify-between mb-1.5" },
+                        React.createElement("span", { className: "font-mono text-[9px] tracking-widest", style: { color: COLORS.sage } }, "SET YOUR DIFFICULTY LEVEL"),
+                        React.createElement("span", { className: "font-mono text-[9px]", style: { color: COLORS.brass } },
+                            "Predicts a ",
                             (GRADE_OPTIONS.find((g) => g.value === passThreshold) || {}).grade,
                             " or better")),
                     React.createElement("div", { className: "flex gap-1" }, GRADE_OPTIONS.map((g) => {
                         const isActive = g.value === passThreshold;
-                        return (React.createElement("button", { key: g.value, onClick: () => setPassThreshold(g.value), className: "flex-1 flex flex-col items-center py-2 rounded font-mono text-[10px] tracking-wide", style: { background: isActive ? COLORS.brass : "transparent", color: isActive ? COLORS.ink : COLORS.sage } },
-                            React.createElement("span", { className: "text-sm font-display" }, g.grade),
-                            React.createElement("span", null,
-                                g.pct,
-                                "%")));
+                        return (React.createElement("button", { key: g.value, onClick: () => setPassThreshold(g.value), className: "flex-1 py-1 rounded font-mono text-[10px] tracking-wide", style: { background: isActive ? COLORS.brass : "transparent", color: isActive ? COLORS.ink : COLORS.sage } },
+                            g.grade,
+                            " \u00B7 ",
+                            g.pct,
+                            "%"));
                     }))))),
             reviewMode && (React.createElement("div", { className: "rounded-md p-3 mb-5 text-center", style: { background: COLORS.panel, border: `1px solid ${COLORS.panelBorder}` } },
                 React.createElement("span", { className: "font-mono text-[10px] tracking-widest", style: { color: COLORS.brass } }, "REVIEWING YOUR TOUGHEST STATES"))),
             React.createElement("div", { className: "relative rounded-lg p-8 min-h-[380px] flex flex-col items-center justify-center overflow-hidden", style: { background: COLORS.paper, border: `1px solid ${COLORS.panelBorder}` } },
                 stampBurst && (React.createElement("div", { className: "stamp-anim absolute top-4 right-4 z-20 rounded-full flex items-center justify-center font-display font-bold text-xs px-4 py-4 border-4", style: { color: COLORS.rust, borderColor: COLORS.rust, background: COLORS.paper, transform: "rotate(-14deg)" } }, "STAMPED")),
-                (levelKey !== "matching" && deck.finished) && (React.createElement("div", { className: "absolute inset-0 flex items-center justify-center rounded-lg", style: { background: "rgba(30,42,34,0.55)" } },
+                (levelKey !== "matching" && deck.finished) && (React.createElement("div", { className: "fixed inset-0 z-50 flex items-center justify-center rounded-lg px-4", style: { background: "rgba(30,42,34,0.55)" } },
                     React.createElement("div", { className: "pop-in rounded-lg p-8 mx-6", style: { background: COLORS.paper, border: `1px solid ${COLORS.panelBorder}`, boxShadow: "0 12px 30px rgba(0,0,0,0.35)" } },
-                        React.createElement(LevelSummary, { correct: deck.correct, total: deck.total, pct: deckPct, threshold: passThreshold, alwaysPass: reviewMode || levelKey === "flash", reviewMode: reviewMode, onRetry: reviewMode ? startReview : retryLevel, onExitReview: exitReview, onContinue: () => { finishLevel(true); if (levelIdx < pack.levels.length - 1)
+                        React.createElement(LevelSummary, { correct: deck.correct, total: deck.total, pct: deckPct, threshold: passThreshold, alwaysPass: reviewMode, reviewMode: reviewMode, onRetry: reviewMode ? startReview : retryLevel, onExitReview: exitReview, onContinue: () => { finishLevel(true); if (levelIdx < pack.levels.length - 1)
                                 nextLevel(); }, isLast: levelIdx === pack.levels.length - 1 })))),
-                levelKey === "matching" && match.finished && (React.createElement("div", { className: "absolute inset-0 flex items-center justify-center rounded-lg", style: { background: "rgba(30,42,34,0.55)" } },
+                levelKey === "matching" && match.finished && (React.createElement("div", { className: "fixed inset-0 z-50 flex items-center justify-center rounded-lg px-4", style: { background: "rgba(30,42,34,0.55)" } },
                     React.createElement("div", { className: "pop-in rounded-lg p-8 mx-6", style: { background: COLORS.paper, border: `1px solid ${COLORS.panelBorder}`, boxShadow: "0 12px 30px rgba(0,0,0,0.35)" } },
                         React.createElement(LevelSummary, { correct: match.correctFirstTry, total: pack.pairs.length, pct: Math.round((match.correctFirstTry / pack.pairs.length) * 100), threshold: passThreshold, alwaysPass: false, reviewMode: false, onRetry: () => setMatch(makeMatch(pack.pairs)), onContinue: () => { finishLevel(true); if (levelIdx < pack.levels.length - 1)
                                 nextLevel(); }, isLast: levelIdx === pack.levels.length - 1 })))),
@@ -990,7 +994,7 @@ function PackApp({ pack, onBackToPacks }) {
                     React.createElement("span", { className: "font-mono text-[10px]", style: { color: COLORS.brass } },
                         progressPct,
                         "%")),
-                pack.mapViewBox ? (React.createElement(MiniMap, { pack: pack, highlightId: levelKey === "matching" ? null : (current ? current.id : null), correctIds: stamped, tall: true })) : (React.createElement("div", { className: "grid gap-1", style: { gridTemplateColumns: `repeat(${Math.min(pack.pairs.length, 10)}, minmax(0,1fr))` } }, pack.pairs.map((s) => (React.createElement("div", { key: s.id, title: s.name, className: "h-3 rounded-sm", style: { background: stamped.has(s.id) ? COLORS.rust : COLORS.panelBorder, opacity: stamped.has(s.id) ? 1 : 0.6 } }))))))))));
+                pack.mapViewBox ? (React.createElement(MiniMap, { pack: pack, highlightId: levelKey === "matching" ? null : (current ? current.id : null), correctIds: stamped, missedIds: missedIds, tall: true })) : (React.createElement("div", { className: "grid gap-1", style: { gridTemplateColumns: `repeat(${Math.min(pack.pairs.length, 10)}, minmax(0,1fr))` } }, pack.pairs.map((s) => (React.createElement("div", { key: s.id, title: s.name, className: "h-3 rounded-sm", style: { background: stamped.has(s.id) ? COLORS.rust : COLORS.panelBorder, opacity: stamped.has(s.id) ? 1 : 0.6 } }))))))))));
 }
 function LevelSummary({ correct, total, pct, threshold, alwaysPass, reviewMode, onRetry, onExitReview, onContinue, isLast }) {
     const thresholdPct = Math.round(threshold * 100);
