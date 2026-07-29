@@ -253,7 +253,8 @@ function MiniMap({ pack, highlightId, correctIds, missedIds, tall }) {
                     fill = COLORS.lightGreen;
                 if (isTarget)
                     fill = COLORS.rust;
-                return (React.createElement("path", { key: s.id, ref: isTarget ? targetRef : null, d, className: isTarget ? "pulse-state" : "", fill, stroke: isTarget ? "#fff" : "#5C7299", strokeWidth: isTarget ? 2 : 0.75 }));
+                const strokeScale = vbWidth / 959;
+                return (React.createElement("path", { key: s.id, ref: isTarget ? targetRef : null, d, className: isTarget ? "pulse-state" : "", fill, stroke: isTarget ? "#fff" : "#3D4D70", strokeWidth: isTarget ? 2 * strokeScale : 1 * strokeScale }));
             }),
             showMarker && (React.createElement("g", { style: { pointerEvents: "none" } },
                 React.createElement("circle", { cx: marker.cx, cy: marker.cy, r: markerR + 5, fill: "none", stroke: "#fff", strokeWidth: 5 }),
