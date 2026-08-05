@@ -11,8 +11,7 @@ No install, no signup, no app store — just open the link and start quizzing. T
 
 Field Atlas now opens to a picker instead of going straight into the states quiz. Tap a region to start studying it — your progress is tracked separately for each one, so switching between regions never mixes up your stats.
 
-![Choose your region](screenshots/region-picker.png)
-<!-- TODO: add screenshots/region-picker.png — a screenshot of the landing page (50 States, South America, Europe unlocked; Africa/Asia/North America/Oceania shown as "Coming Soon") -->
+![Choose your region](screenshots/Picker.PNG)
 
 - **50 States & Capitals** — the original, fully built out.
 - **South America** and **Europe** — countries and capitals, ready to study now.
@@ -68,11 +67,14 @@ A plain alphabetical list of state/country and capital pairs, with a hint for ea
 
 ![Study List](screenshots/study-list.png)
 
+Here's a world region's Study List, showing the "How to Remember These" mnemonic at the top:
+
+![Europe Study List with mnemonic](screenshots/Europe%20study%20list.PNG)
+
 ### Review Weak States
 A focused round built from your 10 most-missed states or countries, ranked by how often you've gotten them wrong.
 
-![Review Weak States](screenshots/weak-states-review.png)
-<!-- TODO: add screenshots/weak-states-review.png — capture the review round in progress (e.g. after missing a few states) and drop it in the screenshots/ folder -->
+![Review Weak States](screenshots/Weak%20state%20review.PNG)
 
 ## Other features
 
