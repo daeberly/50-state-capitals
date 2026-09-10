@@ -261,6 +261,7 @@ function MiniMap({ pack, highlightId, correctIds, missedIds, tall }) {
                 React.createElement("circle", { cx: marker.cx, cy: marker.cy, r: markerR, fill: "none", stroke: COLORS.rust, strokeWidth: 3, className: "pulse-state" }))))));
 }
 const LEVELS = [
+    { key: "intro", label: "Introduction" },
     { key: "flash", label: "Flash Cards" },
     { key: "choice", label: "Multiple Choice" },
     { key: "matching", label: "Matching" },
@@ -436,7 +437,8 @@ const PACKS = {
     states: {
         id: "states", title: "50 States & Capitals", subtitle: "50 STATES \u00B7 50 CAPITALS",
         pairs: STATES, nearby: NEARBY, mapViewBox: MAP_VIEWBOX, statePaths: STATE_PATHS,
-        levels: LEVELS, locked: false, focus: "capital", mnemonic: null,
+        levels: LEVELS, locked: false, focus: "capital",
+        mnemonic: "Millions of American schoolkids learn the states this way: \u201cFifty Nifty United States,\u201d a march-tempo song written by Ray Charles (the choral arranger, not the singer) back in 1961, runs through all 50 in alphabetical order. If that song is stuck in your head from elementary school, lean on it \u2014 the order alone is half the battle.",
     },
     southamerica: {
         id: "southamerica", title: "South America", subtitle: "12 COUNTRIES \u00B7 CAPITALS ARE A BONUS",
@@ -599,7 +601,7 @@ function Landing({ onSelect }) {
             })))));
 }
 function PackApp({ pack, onBackToPacks }) {
-    const STORAGE_KEY = `fieldAtlasProgress_v2_${pack.id}`;
+    const STORAGE_KEY = `fieldAtlasProgress_v3_${pack.id}`;
     const saved = loadProgress(STORAGE_KEY);
 
     const [levelIdx, setLevelIdx] = useState(() => (saved ? saved.levelIdx : 0));
@@ -613,6 +615,7 @@ function PackApp({ pack, onBackToPacks }) {
     const [deck, setDeck] = useState(() => (saved && saved.deck ? makeDeckFromSaved(saved.deck, pack.pairs) : makeDeck(pack.pairs)));
     const [flipped, setFlipped] = useState(false);
     const [showHint, setShowHint] = useState(false);
+    const [introIdx, setIntroIdx] = useState(0);
     const [choiceOptions, setChoiceOptions] = useState([]);
     const [pickedChoice, setPickedChoice] = useState(null);
     const [typed, setTyped] = useState("");
@@ -630,6 +633,7 @@ function PackApp({ pack, onBackToPacks }) {
     }
     const levelKey = reviewMode ? "blank" : pack.levels[levelIdx].key;
     const current = deck.order[deck.pos];
+    const introItem = pack.pairs[introIdx];
     useEffect(() => {
         if (reviewMode)
             return;
@@ -712,6 +716,41 @@ function PackApp({ pack, onBackToPacks }) {
             setCompleted((prev) => new Set(prev).add(levelIdx));
             setUnlockedUpTo((u) => Math.max(u, Math.min(levelIdx + 1, pack.levels.length - 1)));
         }
+    }
+    function persistFinalProgress() {
+        const finalUnlockedUpTo = Math.max(unlockedUpTo, Math.min(levelIdx + 1, pack.levels.length - 1));
+        const finalCompleted = new Set(completed).add(levelIdx);
+        saveProgress(STORAGE_KEY, {
+            levelIdx, unlockedUpTo: finalUnlockedUpTo,
+            completed: Array.from(finalCompleted),
+            stamped: Array.from(stamped),
+            passThreshold, missCounts,
+            deck: { order: deck.order.map((s) => s.id), pos: deck.pos, correct: deck.correct, total: deck.total, finished: deck.finished },
+            match: {
+                batches: match.batches.map((b) => b.map((s) => s.id)),
+                batchIndex: match.batchIndex,
+                matchedIds: Array.from(match.matchedIds),
+                wrongPairs: Array.from(match.wrongPairs),
+                correctFirstTry: match.correctFirstTry,
+                leftOrder: match.leftOrder, rightOrder: match.rightOrder,
+            },
+        });
+    }
+    function introNext() {
+        if (introIdx < pack.pairs.length - 1) {
+            setIntroIdx((i) => i + 1);
+        }
+        else {
+            finishLevel(true);
+            nextLevel();
+        }
+    }
+    function introBack() {
+        setIntroIdx((i) => Math.max(0, i - 1));
+    }
+    function introSkip() {
+        finishLevel(true);
+        nextLevel();
     }
     function goToLevel(i) {
         if (i > unlockedUpTo || reviewMode)
@@ -899,14 +938,41 @@ function PackApp({ pack, onBackToPacks }) {
                 React.createElement("span", { className: "font-mono text-[10px] tracking-widest", style: { color: COLORS.brass } }, "REVIEWING YOUR TOUGHEST STATES"))),
             React.createElement("div", { className: "relative rounded-lg p-8 min-h-[380px] flex flex-col items-center justify-center overflow-hidden", style: { background: COLORS.paper, border: `1px solid ${COLORS.panelBorder}` } },
                 stampBurst && (React.createElement("div", { className: "stamp-anim absolute top-4 right-4 z-20 rounded-full flex items-center justify-center font-display font-bold text-xs px-4 py-4 border-4", style: { color: COLORS.rust, borderColor: COLORS.rust, background: COLORS.paper, transform: "rotate(-14deg)" } }, "STAMPED")),
-                (levelKey !== "matching" && deck.finished) && (React.createElement("div", { className: "fixed inset-0 z-50 flex items-center justify-center rounded-lg px-4", style: { background: "rgba(30,42,34,0.55)" } },
+                (levelKey !== "matching" && levelKey !== "intro" && deck.finished) && (React.createElement("div", { className: "fixed inset-0 z-50 flex items-center justify-center rounded-lg px-4", style: { background: "rgba(30,42,34,0.55)" } },
                     React.createElement("div", { className: "pop-in rounded-lg p-8 mx-6", style: { background: COLORS.paper, border: `1px solid ${COLORS.panelBorder}`, boxShadow: "0 12px 30px rgba(0,0,0,0.35)" } },
-                        React.createElement(LevelSummary, { correct: deck.correct, total: deck.total, pct: deckPct, threshold: passThreshold, alwaysPass: reviewMode, reviewMode: reviewMode, onRetry: reviewMode ? startReview : retryLevel, onExitReview: exitReview, onContinue: () => { finishLevel(true); if (levelIdx < pack.levels.length - 1)
-                                nextLevel(); }, isLast: levelIdx === pack.levels.length - 1 })))),
+                        React.createElement(LevelSummary, { correct: deck.correct, total: deck.total, pct: deckPct, threshold: passThreshold, alwaysPass: reviewMode, reviewMode: reviewMode, onRetry: reviewMode ? startReview : retryLevel, onExitReview: exitReview, onContinue: () => { finishLevel(true); if (levelIdx < pack.levels.length - 1) {
+                                nextLevel();
+                            } else {
+                                persistFinalProgress();
+                                onBackToPacks();
+                            } }, isLast: levelIdx === pack.levels.length - 1 })))),
                 levelKey === "matching" && match.finished && (React.createElement("div", { className: "fixed inset-0 z-50 flex items-center justify-center rounded-lg px-4", style: { background: "rgba(30,42,34,0.55)" } },
                     React.createElement("div", { className: "pop-in rounded-lg p-8 mx-6", style: { background: COLORS.paper, border: `1px solid ${COLORS.panelBorder}`, boxShadow: "0 12px 30px rgba(0,0,0,0.35)" } },
-                        React.createElement(LevelSummary, { correct: match.correctFirstTry, total: pack.pairs.length, pct: Math.round((match.correctFirstTry / pack.pairs.length) * 100), threshold: passThreshold, alwaysPass: false, reviewMode: false, onRetry: () => setMatch(makeMatch(pack.pairs)), onContinue: () => { finishLevel(true); if (levelIdx < pack.levels.length - 1)
-                                nextLevel(); }, isLast: levelIdx === pack.levels.length - 1 })))),
+                        React.createElement(LevelSummary, { correct: match.correctFirstTry, total: pack.pairs.length, pct: Math.round((match.correctFirstTry / pack.pairs.length) * 100), threshold: passThreshold, alwaysPass: false, reviewMode: false, onRetry: () => setMatch(makeMatch(pack.pairs)), onContinue: () => { finishLevel(true); if (levelIdx < pack.levels.length - 1) {
+                                nextLevel();
+                            } else {
+                                persistFinalProgress();
+                                onBackToPacks();
+                            } }, isLast: levelIdx === pack.levels.length - 1 })))),
+                levelKey === "intro" && introItem && (React.createElement(React.Fragment, null,
+                    pack.mnemonic && introIdx === 0 && (React.createElement("div", { className: "rounded-md p-3 mb-4 w-full", style: { background: COLORS.panel, border: `1px solid ${COLORS.panelBorder}` } },
+                        React.createElement("p", { className: "font-mono text-[10px] tracking-widest mb-1", style: { color: COLORS.brass } }, "BEFORE YOU START"),
+                        React.createElement("p", { className: "font-mono text-xs leading-relaxed", style: { color: COLORS.sage } }, pack.mnemonic))),
+                    React.createElement(MiniMap, { pack: pack, highlightId: introItem.id }),
+                    React.createElement("p", { className: "font-mono text-xs tracking-widest mb-1", style: { color: "#C9971F" } }, "MEET"),
+                    React.createElement("h2", { className: "font-display text-4xl text-center mb-2", style: { color: COLORS.ink } }, introItem.name),
+                    React.createElement("p", { className: "font-mono text-sm mb-2", style: { color: COLORS.rust } },
+                        "Capital: ",
+                        introItem.capital),
+                    introItem.hint && React.createElement("p", { className: "font-mono text-xs italic text-center max-w-xs", style: { color: "#8A7A3A" } }, introItem.hint),
+                    React.createElement("p", { className: "font-mono text-[10px] tracking-widest mt-4", style: { color: COLORS.sage } },
+                        introIdx + 1,
+                        " / ",
+                        pack.pairs.length),
+                    React.createElement("div", { className: "flex gap-3 mt-6 w-full" },
+                        introIdx > 0 && React.createElement("button", { onClick: introBack, className: "flex-1 font-mono text-xs tracking-widest px-4 py-2 rounded border", style: { borderColor: COLORS.panelBorder, color: COLORS.ink } }, "\u2039 BACK"),
+                        React.createElement("button", { onClick: introNext, className: "flex-1 font-mono text-xs tracking-widest px-4 py-2 rounded", style: { background: COLORS.ink, color: COLORS.paper } }, introIdx < pack.pairs.length - 1 ? "NEXT \u203A" : "START QUIZ \u2192")),
+                    React.createElement("button", { onClick: introSkip, className: "font-mono text-[10px] tracking-widest underline mt-3", style: { color: COLORS.sage, background: "none", border: "none", padding: 0 } }, "SKIP INTRODUCTION"))),
                 levelKey === "flash" && !deck.finished && current && (React.createElement(React.Fragment, null,
                     React.createElement(MiniMap, { pack: pack, highlightId: current.id }),
                     pack.focus === "name" ? (React.createElement(React.Fragment, null,
