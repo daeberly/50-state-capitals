@@ -29,7 +29,7 @@
 
 <script>
 "use strict";
-const { useState, useEffect, useRef } = React;
+const { useState, useEffect, useRef, useMemo } = React;
 const STATES = [
     ["Alabama", "Montgomery", "Not Birmingham — Montgomery is where Rosa Parks' bus boycott began."],
     ["Alaska", "Juneau", "Rhymes with \u201cknow\u201d \u2014 you gotta Juneau this one!"],
@@ -162,6 +162,11 @@ function shuffle(arr) {
 function normalize(s) {
     return s.trim().toLowerCase().replace(/^(st\.?|saint)\s/, "saint ").replace(/[^a-z ]/g, "");
 }
+function indexById(pairs) {
+    const m = {};
+    pairs.forEach((s) => { m[s.id] = s; });
+    return m;
+}
 function makeDeck(pairs) {
     return { order: shuffle(pairs), pos: 0, correct: 0, total: 0, finished: false };
 }
@@ -181,8 +186,9 @@ function makeMatch(pairs) {
     };
 }
 function buildChoiceOptions(current, nearbyMap, allPairs) {
+    const byId = indexById(allPairs);
     const nearbyIds = ((nearbyMap && nearbyMap[current.id]) || []).filter((id) => id !== current.id);
-    const nearbyStates = shuffle(nearbyIds.map((id) => allPairs[id]).filter(Boolean));
+    const nearbyStates = shuffle(nearbyIds.map((id) => byId[id]).filter(Boolean));
     const picked = nearbyStates.slice(0, 3);
     if (picked.length < 3) {
         const usedIds = new Set([current.id, ...picked.map((s) => s.id)]);
@@ -217,7 +223,9 @@ function IsolatedMap({ pack, id }) {
 }
 function MiniMap({ pack, highlightId, correctIds, missedIds, tall }) {
     const targetRef = useRef(null);
+    const groupRef = useRef(null);
     const [marker, setMarker] = useState(null);
+    const [fitBox, setFitBox] = useState(null);
     useEffect(() => {
         setMarker(null);
         const raf = requestAnimationFrame(() => {
@@ -231,15 +239,33 @@ function MiniMap({ pack, highlightId, correctIds, missedIds, tall }) {
         });
         return () => cancelAnimationFrame(raf);
     }, [highlightId, pack.id]);
+    useEffect(() => {
+        if (!pack.autoFit) {
+            setFitBox(null);
+            return;
+        }
+        const raf = requestAnimationFrame(() => {
+            if (groupRef.current) {
+                try {
+                    const b = groupRef.current.getBBox();
+                    const pad = Math.max(b.width, b.height) * 0.1 || 10;
+                    setFitBox(`${b.x - pad} ${b.y - pad} ${b.width + pad * 2} ${b.height + pad * 2}`);
+                }
+                catch (e) { }
+            }
+        });
+        return () => cancelAnimationFrame(raf);
+    }, [pack.id]);
     if (!pack.mapViewBox || !pack.statePaths)
         return null;
-    const vbParts = pack.mapViewBox.split(" ").map(Number);
+    const viewBox = fitBox || pack.mapViewBox;
+    const vbParts = viewBox.split(" ").map(Number);
     const vbWidth = vbParts[2] || 1000;
     const markerR = vbWidth * 0.02;
     const showMarker = highlightId != null && marker && Math.max(marker.w, marker.h) < vbWidth * 0.05;
     return (React.createElement("div", { className: `relative w-full rounded overflow-hidden ${tall ? "" : "mb-3"}`, style: { background: "#C7D0E0", border: "1px solid #9FB3D1" } },
-        React.createElement("svg", { viewBox: pack.mapViewBox, className: "w-full h-auto block" },
-            pack.pairs.map((s) => {
+        React.createElement("svg", { viewBox, className: "w-full h-auto block" },
+            React.createElement("g", { ref: groupRef }, pack.pairs.map((s) => {
                 const d = pack.statePaths[s.id];
                 if (!d)
                     return null;
@@ -255,7 +281,7 @@ function MiniMap({ pack, highlightId, correctIds, missedIds, tall }) {
                     fill = COLORS.rust;
                 const strokeScale = vbWidth / 959;
                 return (React.createElement("path", { key: s.id, ref: isTarget ? targetRef : null, d, className: isTarget ? "pulse-state" : "", fill, stroke: isTarget ? "#fff" : "#3D4D70", strokeWidth: isTarget ? 2 * strokeScale : 1 * strokeScale }));
-            }),
+            })),
             showMarker && (React.createElement("g", { style: { pointerEvents: "none" } },
                 React.createElement("circle", { cx: marker.cx, cy: marker.cy, r: markerR + 5, fill: "none", stroke: "#fff", strokeWidth: 5 }),
                 React.createElement("circle", { cx: marker.cx, cy: marker.cy, r: markerR, fill: "none", stroke: COLORS.rust, strokeWidth: 3, className: "pulse-state" }))))));
@@ -433,6 +459,37 @@ const CA_PATHS = {
     6: "M1365.9,1951.2L1365.7,1951.4L1365.1,1952.3L1364.7,1953.0L1365.5,1953.8L1365.8,1954.7L1366.2,1955.6L1366.9,1956.6L1367.7,1958.3L1367.9,1959.0L1367.7,1959.5L1366.9,1959.7L1366.2,1960.5L1366.0,1961.5L1366.1,1962.0L1364.0,1963.6L1363.5,1963.9L1363.2,1963.6L1362.7,1962.8L1362.2,1962.2L1361.9,1962.0L1361.7,1961.9L1361.5,1962.1L1361.5,1962.4L1361.7,1963.9L1361.5,1964.5L1360.8,1965.0L1360.0,1967.4L1359.7,1967.1L1357.0,1963.9L1354.6,1959.8L1354.2,1958.0L1354.8,1957.9L1355.3,1957.9L1355.6,1957.6L1356.0,1957.1L1355.7,1955.9L1356.9,1955.0L1357.3,1954.3L1357.6,1954.4L1358.4,1955.5L1359.4,1956.1L1360.7,1957.0L1361.6,1957.2L1360.5,1956.2L1358.8,1955.0L1358.2,1954.2L1357.7,1953.1L1357.1,1953.6L1356.7,1954.0L1356.4,1954.2L1356.1,1953.9L1356.0,1953.6L1355.0,1953.5L1354.7,1953.1L1354.4,1953.0L1354.5,1953.7L1354.7,1954.1L1354.6,1954.6L1354.3,1954.7L1354.0,1954.1L1353.6,1953.6L1353.1,1951.6L1351.9,1950.6L1351.4,1950.3L1350.9,1950.1L1350.2,1949.5L1349.3,1949.1L1348.2,1948.1L1346.7,1947.4L1344.9,1947.1L1342.7,1947.3L1342.0,1947.7L1341.5,1948.2L1341.2,1948.5L1339.9,1949.0L1339.5,1949.9L1339.2,1950.6L1338.5,1951.4L1339.3,1951.9L1335.1,1954.7L1334.2,1955.1L1332.3,1955.4L1331.9,1955.7L1331.3,1956.3L1331.2,1957.1L1331.3,1957.8L1331.9,1958.4L1332.4,1958.7L1333.5,1960.4L1335.6,1962.5L1336.0,1963.2L1336.3,1964.3L1335.7,1964.9L1335.2,1965.1L1333.2,1965.2L1332.6,1965.6L1332.3,1966.3L1331.5,1966.9L1329.0,1967.4L1327.0,1967.5L1326.3,1966.9L1326.2,1965.1L1324.8,1961.9L1324.5,1959.8L1324.2,1960.1L1323.5,1960.3L1323.2,1960.9L1323.0,1962.4L1322.8,1963.0L1322.2,1962.9L1321.1,1962.4L1319.6,1961.9L1317.7,1958.5L1317.5,1957.9L1317.1,1957.1L1315.6,1956.8L1314.3,1956.2L1312.9,1956.2L1312.2,1956.5L1311.5,1956.1L1311.4,1955.2L1309.9,1955.6L1308.0,1955.4L1306.4,1955.0L1305.3,1955.2L1304.3,1955.9L1304.5,1957.6L1304.2,1957.9L1304.1,1957.2L1303.8,1956.4L1303.4,1955.8L1302.6,1955.1L1302.5,1954.9L1302.8,1954.5L1304.4,1953.6L1304.5,1953.1L1304.6,1952.3L1304.4,1951.5L1303.7,1950.3L1304.1,1949.6L1304.9,1949.0L1305.7,1948.5L1305.9,1948.3L1305.7,1947.9L1305.2,1947.5L1304.1,1946.7L1303.5,1946.7L1303.4,1944.5L1303.5,1942.2L1303.6,1942.0L1304.0,1941.9L1304.4,1941.5L1304.6,1940.9L1305.0,1940.6L1305.9,1941.1L1306.8,1941.6L1307.2,1941.4L1307.4,1941.2L1307.6,1941.0L1307.7,1940.8L1308.4,1941.4L1309.9,1942.5L1309.9,1943.0L1309.8,1943.5L1310.2,1945.0L1311.0,1945.2L1311.7,1944.9L1311.9,1945.2L1311.8,1945.4L1311.4,1945.7L1311.3,1947.0L1312.5,1947.6L1313.1,1948.1L1315.2,1947.8L1316.0,1948.0L1316.5,1947.8L1315.9,1946.8L1315.2,1946.1L1315.2,1945.8L1315.8,1946.0L1316.2,1946.5L1317.3,1947.1L1319.1,1949.3L1321.2,1949.8L1322.9,1949.8L1324.5,1949.5L1327.1,1948.6L1328.9,1947.1L1330.3,1946.4L1335.0,1945.0L1336.7,1943.4L1337.4,1943.2L1338.1,1943.0L1339.5,1941.9L1340.3,1941.0L1341.2,1940.6L1343.7,1940.9L1345.3,1941.3L1346.4,1941.3L1347.5,1941.5L1347.9,1942.2L1348.4,1942.5L1351.0,1942.4L1353.2,1942.7L1358.0,1944.7L1360.8,1946.6L1362.3,1948.6ZM1348.8,1955.6L1348.6,1956.1L1348.1,1955.0L1348.1,1954.7L1348.1,1953.7L1348.6,1953.5L1349.0,1953.5L1349.3,1953.6L1349.5,1954.8L1349.3,1955.3ZM1318.5,1966.2L1317.9,1966.3L1316.6,1965.8L1315.7,1964.9L1315.6,1964.6L1315.6,1964.3L1316.1,1963.3L1316.8,1963.0L1317.0,1963.0L1317.7,1964.1L1317.3,1964.5L1317.5,1965.2L1318.3,1965.7ZM1311.4,1943.0L1311.3,1943.6L1310.4,1942.6L1310.9,1942.4L1311.1,1942.5ZM1346.9,1955.8L1346.4,1956.3L1346.2,1955.8L1346.6,1955.3L1346.7,1955.3Z",
 };
 const CA_PATHS_VIEWBOX = "1184 1823 199 160";
+const STATE_REGIONS = {
+    northeast: {
+        label: "Northeast", names: ["Connecticut", "Maine", "Massachusetts", "New Hampshire", "New Jersey", "New York", "Pennsylvania", "Rhode Island", "Vermont"],
+    },
+    midwest: {
+        label: "Midwest", names: ["Illinois", "Indiana", "Iowa", "Kansas", "Michigan", "Minnesota", "Missouri", "Nebraska", "North Dakota", "Ohio", "South Dakota", "Wisconsin"],
+    },
+    south: {
+        label: "South", names: ["Alabama", "Arkansas", "Delaware", "Florida", "Georgia", "Kentucky", "Louisiana", "Maryland", "Mississippi", "North Carolina", "Oklahoma", "South Carolina", "Tennessee", "Texas", "Virginia", "West Virginia"],
+    },
+    west: {
+        label: "West", names: ["Alaska", "Arizona", "California", "Colorado", "Hawaii", "Idaho", "Montana", "Nevada", "New Mexico", "Oregon", "Utah", "Washington", "Wyoming"],
+    },
+};
+const REGION_ORDER = ["northeast", "midwest", "south", "west"];
+function makeRegionPack(regionKey) {
+    const region = STATE_REGIONS[regionKey];
+    if (!region)
+        return PACKS.states;
+    const nameSet = new Set(region.names);
+    const pairs = STATES.filter((s) => nameSet.has(s.name));
+    return {
+        id: `states_${regionKey}`,
+        title: `${region.label} States`,
+        subtitle: `${pairs.length} STATES · ${pairs.length} CAPITALS`,
+        pairs, nearby: NEARBY, mapViewBox: MAP_VIEWBOX, statePaths: STATE_PATHS,
+        levels: LEVELS, locked: false, focus: "capital",
+        mnemonic: PACKS.states.mnemonic,
+        autoFit: true,
+    };
+}
 const PACKS = {
     states: {
         id: "states", title: "50 States & Capitals", subtitle: "50 STATES \u00B7 50 CAPITALS",
@@ -558,13 +615,21 @@ function clearProgress(key) {
 function makeDeckFromSaved(saved, pairs) {
     if (!saved)
         return makeDeck(pairs);
-    return { order: saved.order.map((id) => pairs[id]), pos: saved.pos, correct: saved.correct, total: saved.total, finished: saved.finished };
+    const byId = indexById(pairs);
+    const order = saved.order.map((id) => byId[id]).filter(Boolean);
+    if (order.length !== saved.order.length)
+        return makeDeck(pairs);
+    return { order, pos: saved.pos, correct: saved.correct, total: saved.total, finished: saved.finished };
 }
 function makeMatchFromSaved(saved, pairs) {
     if (!saved)
         return makeMatch(pairs);
+    const byId = indexById(pairs);
+    const batches = saved.batches.map((b) => b.map((id) => byId[id]));
+    if (batches.some((b) => b.some((s) => !s)))
+        return makeMatch(pairs);
     return {
-        batches: saved.batches.map((b) => b.map((id) => pairs[id])),
+        batches,
         batchIndex: saved.batchIndex,
         matchedIds: new Set(saved.matchedIds),
         wrongPairs: new Set(saved.wrongPairs),
@@ -575,11 +640,34 @@ function makeMatchFromSaved(saved, pairs) {
     };
 }
 function App() {
-    const [activePackId, setActivePackId] = useState(null);
-    if (!activePackId) {
-        return React.createElement(Landing, { onSelect: setActivePackId });
+    const [screen, setScreen] = useState("landing");
+    const [activePack, setActivePack] = useState(null);
+    const [cameFromRegions, setCameFromRegions] = useState(false);
+    function openPack(id) {
+        if (id === "states") {
+            setScreen("regions");
+            return;
+        }
+        setActivePack(PACKS[id]);
+        setCameFromRegions(false);
+        setScreen("pack");
     }
-    return React.createElement(PackApp, { pack: PACKS[activePackId], onBackToPacks: () => setActivePackId(null) });
+    function openRegion(regionKey) {
+        setActivePack(regionKey === "all" ? PACKS.states : makeRegionPack(regionKey));
+        setCameFromRegions(true);
+        setScreen("pack");
+    }
+    function backFromPack() {
+        setActivePack(null);
+        setScreen(cameFromRegions ? "regions" : "landing");
+    }
+    if (screen === "pack" && activePack) {
+        return React.createElement(PackApp, { pack: activePack, onBackToPacks: backFromPack });
+    }
+    if (screen === "regions") {
+        return React.createElement(RegionPicker, { onSelect: openRegion, onBack: () => setScreen("landing") });
+    }
+    return React.createElement(Landing, { onSelect: openPack });
 }
 function Landing({ onSelect }) {
     return (React.createElement("div", { className: "min-h-[100dvh] w-full flex items-start justify-center py-8 px-4", style: { background: COLORS.ink, fontFamily: "'Inter', sans-serif" } },
@@ -596,9 +684,27 @@ function Landing({ onSelect }) {
                     } },
                     React.createElement("div", null,
                         React.createElement("div", { className: "font-display text-xl", style: { color: p.locked ? COLORS.sage : COLORS.ink } }, p.title),
-                        React.createElement("div", { className: "font-mono text-[10px] tracking-widest mt-1", style: { color: p.locked ? COLORS.sage : COLORS.rust } }, p.locked ? "COMING SOON" : p.subtitle)),
+                        React.createElement("div", { className: "font-mono text-[10px] tracking-widest mt-1", style: { color: p.locked ? COLORS.sage : COLORS.rust } }, p.locked ? "COMING SOON" : p.id === "states" ? "50 STATES \u00B7 OR PICK A REGION" : p.subtitle)),
                     React.createElement("span", { style: { color: COLORS.sage, fontSize: 22 } }, p.locked ? "\uD83D\uDD12" : "\u2192"));
             })))));
+}
+function RegionPicker({ onSelect, onBack }) {
+    const options = [
+        { key: "all", label: "All 50 States", subtitle: "THE FULL SET" },
+        ...REGION_ORDER.map((key) => ({ key, label: STATE_REGIONS[key].label, subtitle: `${STATE_REGIONS[key].names.length} STATES` })),
+    ];
+    return (React.createElement("div", { className: "min-h-[100dvh] w-full flex items-start justify-center py-8 px-4", style: { background: COLORS.ink, fontFamily: "'Inter', sans-serif" } },
+        React.createElement("div", { className: "w-full max-w-2xl" },
+            React.createElement("button", { onClick: onBack, className: "font-mono text-[10px] tracking-widest mb-4", style: { color: COLORS.sage } }, "\u2039 RETURN TO MAIN MENU"),
+            React.createElement("h1", { className: "font-display text-3xl mb-1 text-center", style: { color: COLORS.paper } }, "50 States & Capitals"),
+            React.createElement("p", { className: "font-mono text-xs tracking-widest text-center mb-8", style: { color: COLORS.sage } }, "STUDY ALL 50, OR JUST ONE REGION"),
+            React.createElement("div", { className: "grid grid-cols-1 gap-3" }, options.map((o) => (
+                React.createElement("button", { key: o.key, onClick: () => onSelect(o.key), className: "text-left rounded-lg p-5 flex items-center justify-between", style: { background: COLORS.paper, border: `1px solid ${COLORS.panelBorder}` } },
+                    React.createElement("div", null,
+                        React.createElement("div", { className: "font-display text-xl", style: { color: COLORS.ink } }, o.label),
+                        React.createElement("div", { className: "font-mono text-[10px] tracking-widest mt-1", style: { color: COLORS.rust } }, o.subtitle)),
+                    React.createElement("span", { style: { color: COLORS.sage, fontSize: 22 } }, "\u2192")))))
+        )));
 }
 function PackApp({ pack, onBackToPacks }) {
     const STORAGE_KEY = `fieldAtlasProgress_v3_${pack.id}`;
@@ -625,6 +731,7 @@ function PackApp({ pack, onBackToPacks }) {
     const [match, setMatch] = useState(() => (saved && saved.match ? makeMatchFromSaved(saved.match, pack.pairs) : makeMatch(pack.pairs)));
     const inputRef = useRef(null);
     const didMount = useRef(false);
+    const pairsById = useMemo(() => indexById(pack.pairs), [pack]);
     function resetProgress() {
         if (window.confirm("Clear all saved progress? This can't be undone.")) {
             clearProgress(STORAGE_KEY);
@@ -717,25 +824,6 @@ function PackApp({ pack, onBackToPacks }) {
             setUnlockedUpTo((u) => Math.max(u, Math.min(levelIdx + 1, pack.levels.length - 1)));
         }
     }
-    function persistFinalProgress() {
-        const finalUnlockedUpTo = Math.max(unlockedUpTo, Math.min(levelIdx + 1, pack.levels.length - 1));
-        const finalCompleted = new Set(completed).add(levelIdx);
-        saveProgress(STORAGE_KEY, {
-            levelIdx, unlockedUpTo: finalUnlockedUpTo,
-            completed: Array.from(finalCompleted),
-            stamped: Array.from(stamped),
-            passThreshold, missCounts,
-            deck: { order: deck.order.map((s) => s.id), pos: deck.pos, correct: deck.correct, total: deck.total, finished: deck.finished },
-            match: {
-                batches: match.batches.map((b) => b.map((s) => s.id)),
-                batchIndex: match.batchIndex,
-                matchedIds: Array.from(match.matchedIds),
-                wrongPairs: Array.from(match.wrongPairs),
-                correctFirstTry: match.correctFirstTry,
-                leftOrder: match.leftOrder, rightOrder: match.rightOrder,
-            },
-        });
-    }
     function introNext() {
         if (introIdx < pack.pairs.length - 1) {
             setIntroIdx((i) => i + 1);
@@ -765,8 +853,8 @@ function PackApp({ pack, onBackToPacks }) {
     }
     function startReview() {
         const ranked = Object.keys(missCounts)
-            .map((id) => ({ ...pack.pairs[Number(id)], misses: missCounts[id] }))
-            .filter((s) => s.misses > 0)
+            .map((id) => ({ ...pairsById[Number(id)], misses: missCounts[id] }))
+            .filter((s) => s.id !== undefined && s.misses > 0)
             .sort((a, b) => b.misses - a.misses)
             .slice(0, 10);
         if (!ranked.length)
@@ -940,20 +1028,12 @@ function PackApp({ pack, onBackToPacks }) {
                 stampBurst && (React.createElement("div", { className: "stamp-anim absolute top-4 right-4 z-20 rounded-full flex items-center justify-center font-display font-bold text-xs px-4 py-4 border-4", style: { color: COLORS.rust, borderColor: COLORS.rust, background: COLORS.paper, transform: "rotate(-14deg)" } }, "STAMPED")),
                 (levelKey !== "matching" && levelKey !== "intro" && deck.finished) && (React.createElement("div", { className: "fixed inset-0 z-50 flex items-center justify-center rounded-lg px-4", style: { background: "rgba(30,42,34,0.55)" } },
                     React.createElement("div", { className: "pop-in rounded-lg p-8 mx-6", style: { background: COLORS.paper, border: `1px solid ${COLORS.panelBorder}`, boxShadow: "0 12px 30px rgba(0,0,0,0.35)" } },
-                        React.createElement(LevelSummary, { correct: deck.correct, total: deck.total, pct: deckPct, threshold: passThreshold, alwaysPass: reviewMode, reviewMode: reviewMode, onRetry: reviewMode ? startReview : retryLevel, onExitReview: exitReview, onContinue: () => { finishLevel(true); if (levelIdx < pack.levels.length - 1) {
-                                nextLevel();
-                            } else {
-                                persistFinalProgress();
-                                onBackToPacks();
-                            } }, isLast: levelIdx === pack.levels.length - 1 })))),
+                        React.createElement(LevelSummary, { correct: deck.correct, total: deck.total, pct: deckPct, threshold: passThreshold, alwaysPass: reviewMode, reviewMode: reviewMode, onRetry: reviewMode ? startReview : retryLevel, onExitReview: exitReview, onContinue: () => { finishLevel(true); if (levelIdx < pack.levels.length - 1)
+                                nextLevel(); }, isLast: levelIdx === pack.levels.length - 1 })))),
                 levelKey === "matching" && match.finished && (React.createElement("div", { className: "fixed inset-0 z-50 flex items-center justify-center rounded-lg px-4", style: { background: "rgba(30,42,34,0.55)" } },
                     React.createElement("div", { className: "pop-in rounded-lg p-8 mx-6", style: { background: COLORS.paper, border: `1px solid ${COLORS.panelBorder}`, boxShadow: "0 12px 30px rgba(0,0,0,0.35)" } },
-                        React.createElement(LevelSummary, { correct: match.correctFirstTry, total: pack.pairs.length, pct: Math.round((match.correctFirstTry / pack.pairs.length) * 100), threshold: passThreshold, alwaysPass: false, reviewMode: false, onRetry: () => setMatch(makeMatch(pack.pairs)), onContinue: () => { finishLevel(true); if (levelIdx < pack.levels.length - 1) {
-                                nextLevel();
-                            } else {
-                                persistFinalProgress();
-                                onBackToPacks();
-                            } }, isLast: levelIdx === pack.levels.length - 1 })))),
+                        React.createElement(LevelSummary, { correct: match.correctFirstTry, total: pack.pairs.length, pct: Math.round((match.correctFirstTry / pack.pairs.length) * 100), threshold: passThreshold, alwaysPass: false, reviewMode: false, onRetry: () => setMatch(makeMatch(pack.pairs)), onContinue: () => { finishLevel(true); if (levelIdx < pack.levels.length - 1)
+                                nextLevel(); }, isLast: levelIdx === pack.levels.length - 1 })))),
                 levelKey === "intro" && introItem && (React.createElement(React.Fragment, null,
                     pack.mnemonic && introIdx === 0 && (React.createElement("div", { className: "rounded-md p-3 mb-4 w-full", style: { background: COLORS.panel, border: `1px solid ${COLORS.panelBorder}` } },
                         React.createElement("p", { className: "font-mono text-[10px] tracking-widest mb-1", style: { color: COLORS.brass } }, "BEFORE YOU START"),
@@ -1027,7 +1107,7 @@ function PackApp({ pack, onBackToPacks }) {
                         match.batches.length),
                     React.createElement("div", { className: "grid grid-cols-2 gap-6 w-full" },
                         React.createElement("div", { className: "flex flex-col gap-2" }, match.leftOrder.map((id) => {
-                            const s = pack.pairs[id];
+                            const s = pairsById[id];
                             const isMatched = match.matchedIds.has(id);
                             const isSelected = match.selectedState === id;
                             const isWrongFlash = match.flashWrongIds && match.flashWrongIds[0] === id;
@@ -1041,7 +1121,7 @@ function PackApp({ pack, onBackToPacks }) {
                             return (React.createElement("button", { key: id, disabled: isMatched, onClick: () => selectState(id), className: "font-mono text-sm py-3 px-3 rounded text-left min-h-[48px]", style: { background: bg, color: isMatched ? "#C7D0E0" : isWrongFlash || isSelected ? COLORS.paper : COLORS.ink, opacity: isMatched ? 0.35 : 1 } }, s.name));
                         })),
                         React.createElement("div", { className: "flex flex-col gap-2" }, match.rightOrder.map((id) => {
-                            const s = pack.pairs[id];
+                            const s = pairsById[id];
                             const isMatched = match.matchedIds.has(id);
                             const isSelected = match.selectedCapital === id;
                             const isWrongFlash = match.flashWrongIds && match.flashWrongIds[1] === id;
