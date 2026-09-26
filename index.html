@@ -1009,7 +1009,7 @@ function PackApp({ pack, onBackToPacks, lastUpdatedLabel }) {
                     React.createElement("h1", { className: "font-display text-2xl leading-tight", style: { color: COLORS.paper } }, "Field Atlas"),
                     React.createElement("p", { className: "font-mono text-[11px] tracking-wide", style: { color: COLORS.sage } }, pack.subtitle),
                     React.createElement("div", { className: "flex gap-1 mt-0.5 flex-wrap text-[7px]" },
-                        React.createElement("button", { onClick: onBackToPacks, className: "font-mono tracking-widest underline", style: { color: COLORS.sage, background: "none", border: "none", padding: 0 } }, "\u2039 RET"),
+                        React.createElement("button", { onClick: onBackToPacks, className: "font-mono tracking-widest underline text-[8px]", style: { color: COLORS.sage, background: "none", border: "none", padding: 0 } }, "\u2190 Main Menu"),
                         React.createElement("a", { href: "https://github.com/daeberly/50-state-capitals/blob/main/README.md", target: "_blank", rel: "noopener noreferrer", className: "font-mono tracking-widest underline", style: { color: COLORS.sage } }, "HELP"),
                         React.createElement("a", { href: "https://github.com/daeberly/50-state-capitals", target: "_blank", rel: "noopener noreferrer", className: "font-mono tracking-widest underline", style: { color: COLORS.sage } }, "SHARE")),
                     React.createElement("p", { className: "font-mono text-[5px] tracking-tight leading-none mt-0.5", style: { color: COLORS.brass, opacity: 0.75 } }, `MADE BY ELLIE EBERLY`)),
@@ -1028,18 +1028,18 @@ function PackApp({ pack, onBackToPacks, lastUpdatedLabel }) {
                         border: `1px solid ${COLORS.panelBorder}`,
                     } }, reviewMode ? "BACK TO LEVELS" : `REVIEW WEAK STATES (${weakCount})`)),
             !reviewMode && (React.createElement(React.Fragment, null,
-                React.createElement("div", { className: "rounded-md p-3 mb-5", style: { background: COLORS.panel, border: `1px solid ${COLORS.panelBorder}` } },
-                    React.createElement("div", { className: "flex gap-1" }, pack.levels.map((lv, i) => {
+                React.createElement("div", { className: "rounded-md p-1.5 mb-3", style: { background: COLORS.panel, border: `1px solid ${COLORS.panelBorder}` } },
+                    React.createElement("div", { className: "flex gap-0.5" }, pack.levels.map((lv, i) => {
                         const isLocked = i > unlockedUpTo;
                         const isDone = completed.has(i);
                         const isCurrent = i === levelIdx;
-                        return (React.createElement("button", { key: lv.key, onClick: () => goToLevel(i), disabled: isLocked, className: "flex-1 flex flex-col items-center gap-1 py-2 rounded font-mono text-[10px] tracking-wide", style: {
+                        return (React.createElement("button", { key: lv.key, onClick: () => goToLevel(i), disabled: isLocked, className: "flex-1 flex flex-col items-center gap-0.5 py-1 px-0.5 rounded font-mono text-[8px] tracking-wide", style: {
                                 background: isCurrent ? COLORS.paper : "transparent",
                                 color: isLocked ? "#4A5C82" : isCurrent ? COLORS.ink : COLORS.sage,
                                 cursor: isLocked ? "not-allowed" : "pointer",
                             } },
-                            React.createElement("span", null, isLocked ? "\u{1F512}" : isDone ? "\u2713" : i + 1),
-                            React.createElement("span", { className: "text-center leading-tight" }, lv.label.toUpperCase())));
+                            React.createElement("span", { className: "leading-none text-[9px]" }, isLocked ? "\u{1F512}" : isDone ? "\u2713" : i + 1),
+                            React.createElement("span", { className: "text-center leading-none" }, lv.label.toUpperCase())));
                     }))),
                 React.createElement("div", { className: "rounded-md p-2 mb-5", style: { background: COLORS.panel, border: `1px solid ${COLORS.panelBorder}` } },
                     React.createElement("div", { className: "flex items-center justify-between mb-1.5" },
