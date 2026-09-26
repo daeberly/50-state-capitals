@@ -2,6 +2,8 @@
 
 A geography study app — learn all 50 U.S. states and capitals (or just one region of them), plus countries and capitals around the world — built as a single self-contained web app that installs like a native app on your phone's home screen.
 
+**Made by Ellie Eberly** · started August 2026 · [view on GitHub](https://github.com/daeberly/50-state-capitals) to share it, fork it, or grab the latest source.
+
 ### 🗺️ [**Try Field Atlas now →**](https://daeberly.github.io/50-state-capitals/)
 No install, no signup, no app store — just open the link and start quizzing. Takes 30 seconds to add to your home screen (see below) so it feels and works like any other app on your phone.
 
@@ -24,7 +26,7 @@ Tapping **50 States & Capitals** now opens a second picker instead of going stra
 - **All 50 States** — the full set, same as before.
 - **Northeast** (11 states), **Southeast** (12), **Midwest** (12), **Southwest** (4), **West** (11) — the standard 5-region breakdown taught in most U.S. schools, so you can drill down on just the part of the country you're shaky on instead of always doing the whole thing at once.
 
-<!-- TODO: add screenshots/region-picker.png — capture the "All 50 States / Northeast / Midwest / South / West" picker screen and drop it in the screenshots/ folder -->
+![Region picker](screenshots/region-picker.png)
 
 Each region keeps its own progress, difficulty setting, and weak-state list, completely separate from the full 50-state pack and from each other — so studying just the Northeast doesn't touch your progress on the full set. **Return to Main Menu** from inside a region takes you back to this picker (not all the way out to the region list), so it's a single tap to switch to a different one.
 
@@ -43,13 +45,13 @@ You move through **six rounds**, each one building on the last. Every graded rou
 
 The **Introduction** round exists so you're not guessing "Didn't Know" over and over the moment you start a brand-new pack — it's just a calm first pass to see everything once before you're tested on it. If there's a well-known song or mnemonic for the pack (like "Fifty Nifty United States" for the 50-state pack), it's shown right on this round too.
 
-<!-- TODO: add screenshots/level0-introduction.png — capture the Introduction round (the Next/Previous browsing screen) and drop it in the screenshots/ folder -->
+![Introduction round](screenshots/level0-introduction.png)
 
 The idea for world regions: **learning where a country is and what it's called comes first — its capital is a nice bonus**, not the main event. States mode stays capital-focused throughout, same as it's always been.
 
 ![Studying a country on the map](screenshots/continent-map-question.png)
 
-Every graded round — not just Map Fill-In — shows a small live map with the current state or country highlighted, so you always have a visual reference while you think. Tiny countries (Vatican City, Monaco, Andorra, etc.) get an extra target-ring marker so they don't disappear at map scale, and the four U.S. regions above automatically zoom the map in to that region instead of showing it as a speck on the full country.
+Every graded round — not just Map Fill-In — shows a small live map with the current state or country highlighted, so you always have a visual reference while you think. Tiny countries (Vatican City, Monaco, Andorra, etc.) get an extra target-ring marker so they don't disappear at map scale, and the five U.S. regions above automatically zoom the map in to that region instead of showing it as a speck on the full country.
 
 You choose how strict "passing" is, framed as a school grade — a compact one-line row under **Set Your Difficulty Level**:
 
@@ -62,7 +64,7 @@ Whichever you pick becomes the bar for unlocking the next round — so passing a
 ## Screenshots
 
 ### Introduction
-<!-- TODO: add screenshots/level0-introduction.png (see above) -->
+![Introduction round](screenshots/level0-introduction.png)
 
 ### Flash Cards
 ![Flash Cards](screenshots/level1-flash-cards.png)
@@ -101,6 +103,8 @@ A focused round built from your 10 most-missed states or countries, ranked by ho
 
 - **Review Weak States** — every wrong answer is quietly logged in the background, across all rounds. Once you've missed anything, a "Review Weak States" button appears next to Study List, showing a live count. Tapping it pulls your 10 most-missed states/countries (ranked by miss count) into a focused round; a "Back to Levels" button takes you back to your regular progress whenever you're done.
 - **How This Works** — a small link in the app header opens this README, so help is always one tap away.
+- **Share This App (GitHub)** — right next to it, a second link opens this repo's main GitHub page, so anyone you send it to can read about it, grab the link to install it themselves, or fork their own copy.
+- **Made by Ellie Eberly** — a small credit line on the main menu and in every pack header. The "Updated" date next to it isn't hand-typed: the app fetches its own page and reads the `Last-Modified` date GitHub Pages sends back, so it automatically reflects whenever `index.html` was last pushed to the repo — no manual bumping needed as this keeps getting improved.
 - **Progress is saved automatically, per pack** — your round, unlocks, difficulty setting, and stamped map all persist between visits (stored locally on your device, nothing sent anywhere). Studying South America doesn't touch your States progress, and studying just the Northeast doesn't touch the full 50-state pack or any other region — each one is tracked completely independently.
 - **Reset Progress** — a small link under the stamp counter wipes that pack's saved state (unlocked rounds, stamped map, and weak-item history) and starts it back at round 1. It asks for confirmation first, then reloads.
 - **Sound + haptic feedback on correct answers** — a tone plus a light buzz/tap confirms you got it right. Haptics use `navigator.vibrate` where it's supported (Android); on iPhone, Safari has no vibration API at all, so the app uses an unofficial workaround (toggling a hidden native switch) to get a system haptic tick on iOS 18+. It's a hack, not an official API, so it may stop working in a future iOS release — see the note in [Running it yourself](#running-it-yourself). Wrong answers only get the sound, no vibration — and stay on screen long enough to actually read and remember the correct answer before moving on.

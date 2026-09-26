@@ -536,6 +536,33 @@ const COLORS = {
     rust: "#B3261E", pine: "#1F7A3D", brass: "#E8B923", lightGreen: "#8BC34A", orange: "#E8862A",
     sage: "#9FB3D1", panel: "#122B57", panelBorder: "#28456F",
 };
+// App credit line shown on the main menu and inside each pack.
+// CREATED_LABEL is fixed (when this project started); UPDATED_FALLBACK is only
+// used if the auto-detection below can't run (e.g. opened from a local file
+// instead of the live GitHub Pages URL). When deployed to GitHub Pages, the
+// "updated" date is read automatically from the page's own Last-Modified
+// response header, so it always reflects whenever index.html was last
+// pushed to the repo -- nobody needs to remember to bump it by hand.
+const APP_CREATED_LABEL = "Aug 2026";
+const APP_UPDATED_FALLBACK = "Sep 2026";
+function useLastUpdatedLabel() {
+    const [label, setLabel] = useState(APP_UPDATED_FALLBACK);
+    useEffect(() => {
+        fetch(window.location.href, { method: "HEAD", cache: "no-store" })
+            .then((res) => {
+            const raw = res.headers.get("last-modified");
+            if (!raw)
+                return;
+            const d = new Date(raw);
+            if (isNaN(d.getTime()))
+                return;
+            const formatted = d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+            setLabel(formatted);
+        })
+            .catch(() => { });
+    }, []);
+    return label;
+}
 // --- sound + haptic feedback (feature-detected; harmless no-ops where unsupported) ---
 let audioCtx = null;
 function getAudioCtx() {
@@ -646,6 +673,7 @@ function App() {
     const [screen, setScreen] = useState("landing");
     const [activePack, setActivePack] = useState(null);
     const [cameFromRegions, setCameFromRegions] = useState(false);
+    const lastUpdatedLabel = useLastUpdatedLabel();
     function openPack(id) {
         if (id === "states") {
             setScreen("regions");
@@ -665,18 +693,19 @@ function App() {
         setScreen(cameFromRegions ? "regions" : "landing");
     }
     if (screen === "pack" && activePack) {
-        return React.createElement(PackApp, { pack: activePack, onBackToPacks: backFromPack });
+        return React.createElement(PackApp, { pack: activePack, onBackToPacks: backFromPack, lastUpdatedLabel });
     }
     if (screen === "regions") {
         return React.createElement(RegionPicker, { onSelect: openRegion, onBack: () => setScreen("landing") });
     }
-    return React.createElement(Landing, { onSelect: openPack });
+    return React.createElement(Landing, { onSelect: openPack, lastUpdatedLabel });
 }
-function Landing({ onSelect }) {
+function Landing({ onSelect, lastUpdatedLabel }) {
     return (React.createElement("div", { className: "min-h-[100dvh] w-full flex items-start justify-center py-8 px-4", style: { background: COLORS.ink, fontFamily: "'Inter', sans-serif" } },
         React.createElement("div", { className: "w-full max-w-2xl" },
             React.createElement("h1", { className: "font-display text-4xl mb-1 text-center", style: { color: COLORS.paper } }, "Field Atlas"),
-            React.createElement("p", { className: "font-mono text-xs tracking-widest text-center mb-8", style: { color: COLORS.sage } }, "CHOOSE A REGION TO STUDY"),
+            React.createElement("p", { className: "font-mono text-xs tracking-widest text-center mb-2", style: { color: COLORS.sage } }, "CHOOSE A REGION TO STUDY"),
+            React.createElement("p", { className: "font-mono text-[9px] tracking-widest text-center mb-8", style: { color: COLORS.brass, opacity: 0.85 } }, `MADE BY ELLIE EBERLY · EST. ${APP_CREATED_LABEL} · UPDATED ${lastUpdatedLabel}`),
             React.createElement("div", { className: "grid grid-cols-1 gap-3" }, PACK_ORDER.map((id) => {
                 const p = PACKS[id];
                 return React.createElement("button", { key: id, disabled: p.locked, onClick: () => !p.locked && onSelect(id), className: "text-left rounded-lg p-5 flex items-center justify-between", style: {
@@ -709,7 +738,7 @@ function RegionPicker({ onSelect, onBack }) {
                     React.createElement("span", { style: { color: COLORS.sage, fontSize: 22 } }, "\u2192")))))
         )));
 }
-function PackApp({ pack, onBackToPacks }) {
+function PackApp({ pack, onBackToPacks, lastUpdatedLabel }) {
     const STORAGE_KEY = `fieldAtlasProgress_v3_${pack.id}`;
     const saved = loadProgress(STORAGE_KEY);
 
@@ -979,9 +1008,11 @@ function PackApp({ pack, onBackToPacks }) {
                 React.createElement("div", null,
                     React.createElement("h1", { className: "font-display text-3xl", style: { color: COLORS.paper } }, "Field Atlas"),
                     React.createElement("p", { className: "font-mono text-xs tracking-wide", style: { color: COLORS.sage } }, pack.subtitle),
-                    React.createElement("div", { className: "flex gap-3 mt-1" },
+                    React.createElement("div", { className: "flex gap-3 mt-1 flex-wrap" },
                         React.createElement("button", { onClick: onBackToPacks, className: "font-mono text-[9px] tracking-widest underline", style: { color: COLORS.sage, background: "none", border: "none", padding: 0 } }, "\u2039 RETURN TO MAIN MENU"),
-                        React.createElement("a", { href: "https://github.com/daeberly/50-state-capitals/blob/58c2755cadaf7121c876f0ef54f995e42549b700/README.md", target: "_blank", rel: "noopener noreferrer", className: "font-mono text-[9px] tracking-widest underline", style: { color: COLORS.sage } }, "How This Works (click here)"))),
+                        React.createElement("a", { href: "https://github.com/daeberly/50-state-capitals/blob/main/README.md", target: "_blank", rel: "noopener noreferrer", className: "font-mono text-[9px] tracking-widest underline", style: { color: COLORS.sage } }, "How This Works (click here)"),
+                        React.createElement("a", { href: "https://github.com/daeberly/50-state-capitals", target: "_blank", rel: "noopener noreferrer", className: "font-mono text-[9px] tracking-widest underline", style: { color: COLORS.sage } }, "Share This App (GitHub) \u2197")),
+                    React.createElement("p", { className: "font-mono text-[8px] tracking-widest mt-1", style: { color: COLORS.brass, opacity: 0.85 } }, `MADE BY ELLIE EBERLY \u00b7 EST. ${APP_CREATED_LABEL} \u00b7 UPDATED ${lastUpdatedLabel}`)),
                 React.createElement("div", { className: "text-right font-mono", style: { color: COLORS.brass } },
                     React.createElement("div", { className: "text-2xl leading-none" },
                         stamped.size,
