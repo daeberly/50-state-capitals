@@ -461,19 +461,22 @@ const CA_PATHS = {
 const CA_PATHS_VIEWBOX = "1184 1823 199 160";
 const STATE_REGIONS = {
     northeast: {
-        label: "Northeast", names: ["Connecticut", "Maine", "Massachusetts", "New Hampshire", "New Jersey", "New York", "Pennsylvania", "Rhode Island", "Vermont"],
+        label: "Northeast", names: ["Connecticut", "Delaware", "Maine", "Maryland", "Massachusetts", "New Hampshire", "New Jersey", "New York", "Pennsylvania", "Rhode Island", "Vermont"],
+    },
+    southeast: {
+        label: "Southeast", names: ["Alabama", "Arkansas", "Florida", "Georgia", "Kentucky", "Louisiana", "Mississippi", "North Carolina", "South Carolina", "Tennessee", "Virginia", "West Virginia"],
     },
     midwest: {
         label: "Midwest", names: ["Illinois", "Indiana", "Iowa", "Kansas", "Michigan", "Minnesota", "Missouri", "Nebraska", "North Dakota", "Ohio", "South Dakota", "Wisconsin"],
     },
-    south: {
-        label: "South", names: ["Alabama", "Arkansas", "Delaware", "Florida", "Georgia", "Kentucky", "Louisiana", "Maryland", "Mississippi", "North Carolina", "Oklahoma", "South Carolina", "Tennessee", "Texas", "Virginia", "West Virginia"],
+    southwest: {
+        label: "Southwest", names: ["Arizona", "New Mexico", "Oklahoma", "Texas"],
     },
     west: {
-        label: "West", names: ["Alaska", "Arizona", "California", "Colorado", "Hawaii", "Idaho", "Montana", "Nevada", "New Mexico", "Oregon", "Utah", "Washington", "Wyoming"],
+        label: "West", names: ["Alaska", "California", "Colorado", "Hawaii", "Idaho", "Montana", "Nevada", "Oregon", "Utah", "Washington", "Wyoming"],
     },
 };
-const REGION_ORDER = ["northeast", "midwest", "south", "west"];
+const REGION_ORDER = ["northeast", "southeast", "midwest", "southwest", "west"];
 function makeRegionPack(regionKey) {
     const region = STATE_REGIONS[regionKey];
     if (!region)
@@ -1169,7 +1172,7 @@ function PackApp({ pack, onBackToPacks }) {
                     React.createElement("span", { className: "font-mono text-[10px]", style: { color: COLORS.brass } },
                         progressPct,
                         "%")),
-                pack.mapViewBox ? (React.createElement(MiniMap, { pack: pack, highlightId: levelKey === "matching" ? null : (current ? current.id : null), correctIds: stamped, missedIds: missedIds, tall: true })) : (React.createElement("div", { className: "grid gap-1", style: { gridTemplateColumns: `repeat(${Math.min(pack.pairs.length, 10)}, minmax(0,1fr))` } }, pack.pairs.map((s) => (React.createElement("div", { key: s.id, title: s.name, className: "h-3 rounded-sm", style: { background: stamped.has(s.id) ? COLORS.rust : COLORS.panelBorder, opacity: stamped.has(s.id) ? 1 : 0.6 } }))))))))));
+                pack.mapViewBox ? (React.createElement(MiniMap, { pack: pack, highlightId: levelKey === "matching" ? null : levelKey === "intro" ? (introItem ? introItem.id : null) : (current ? current.id : null), correctIds: stamped, missedIds: missedIds, tall: true })) : (React.createElement("div", { className: "grid gap-1", style: { gridTemplateColumns: `repeat(${Math.min(pack.pairs.length, 10)}, minmax(0,1fr))` } }, pack.pairs.map((s) => (React.createElement("div", { key: s.id, title: s.name, className: "h-3 rounded-sm", style: { background: stamped.has(s.id) ? COLORS.rust : COLORS.panelBorder, opacity: stamped.has(s.id) ? 1 : 0.6 } }))))))))));
 }
 function LevelSummary({ correct, total, pct, threshold, alwaysPass, reviewMode, onRetry, onExitReview, onContinue, isLast }) {
     const thresholdPct = Math.round(threshold * 100);

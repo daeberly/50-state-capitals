@@ -1,6 +1,6 @@
 # <img src="icon-192.png" width="40" height="40" align="left" style="margin-right:8px;border-radius:8px;"> Field Atlas
 
-A geography study app — learn all 50 U.S. states and capitals, plus countries and capitals around the world — built as a single self-contained web app that installs like a native app on your phone's home screen.
+A geography study app — learn all 50 U.S. states and capitals (or just one region of them), plus countries and capitals around the world — built as a single self-contained web app that installs like a native app on your phone's home screen.
 
 ### 🗺️ [**Try Field Atlas now →**](https://daeberly.github.io/50-state-capitals/)
 No install, no signup, no app store — just open the link and start quizzing. Takes 30 seconds to add to your home screen (see below) so it feels and works like any other app on your phone.
@@ -9,57 +9,74 @@ No install, no signup, no app store — just open the link and start quizzing. T
 
 ## Choose your region
 
-Field Atlas now opens to a picker instead of going straight into the states quiz. Tap a region to start studying it — your progress is tracked separately for each one, so switching between regions never mixes up your stats.
+Field Atlas opens to a picker instead of going straight into a quiz. Tap a region to start studying it — your progress is tracked separately for each one, so switching between regions never mixes up your stats.
 
 ![Choose your region](screenshots/Picker.PNG)
 
-- **50 States & Capitals** — the original, fully built out.
-- **South America** and **Europe** — countries and capitals, ready to study now.
+- **50 States & Capitals** — the original, fully built out. Tapping it doesn't drop you straight into all 50 anymore — see [Study just one part of the states](#study-just-one-part-of-the-states) below.
+- **South America**, **Europe**, and **Central America** — countries and capitals, ready to study now.
 - **Africa, Asia, North America, Oceania** — shown as "Coming Soon" for now, more on the way.
+
+## Study just one part of the states
+
+Tapping **50 States & Capitals** now opens a second picker instead of going straight into all 50:
+
+- **All 50 States** — the full set, same as before.
+- **Northeast** (11 states), **Southeast** (12), **Midwest** (12), **Southwest** (4), **West** (11) — the standard 5-region breakdown taught in most U.S. schools, so you can drill down on just the part of the country you're shaky on instead of always doing the whole thing at once.
+
+<!-- TODO: add screenshots/region-picker.png — capture the "All 50 States / Northeast / Midwest / South / West" picker screen and drop it in the screenshots/ folder -->
+
+Each region keeps its own progress, difficulty setting, and weak-state list, completely separate from the full 50-state pack and from each other — so studying just the Northeast doesn't touch your progress on the full set. **Return to Main Menu** from inside a region takes you back to this picker (not all the way out to the region list), so it's a single tap to switch to a different one.
 
 ## How it works
 
-You move through **five levels**, each one harder than the last. Every level needs a passing score to unlock the next — and this now includes Flash Cards too, so hitting your target score matters on every level, not just some of them.
+You move through **six rounds**, each one building on the last. Every graded round needs a passing score to unlock the next:
 
-**States** and **world regions (South America, Europe, etc.)** are quizzed a little differently, matched to what's actually useful to learn for each:
-
-| # | Level | States asks... | World regions ask... |
+| # | Round | States asks... | World regions ask... |
 |---|-------|-----------------|------------------------|
-| 1 | **Flash Cards** | the capital of the highlighted state | you to name the highlighted country (capital shown as a bonus on the flip side) |
-| 2 | **Multiple Choice** | the capital, from 4 options pulled from *nearby* states | the country name, from 4 options pulled from *neighboring* countries |
-| 3 | **Matching** | states to capitals, in sets of 10 | countries to capitals, in sets of 10 (a bonus round — see below) |
-| 4 | **Map Fill-In** | you locate the state and type its capital | you locate the country and type its name |
-| 5 | **Fill in the Blank** | just the state name, no aids | just the country's outline alone, zoomed in with no neighboring countries for context — the hardest level |
+| 1 | **Introduction** | an ungraded browse through every state (or the states in your chosen region), north‑to‑south / west‑to‑east — Next and Previous, no pressure, just first exposure | the same, browsing every country in the pack |
+| 2 | **Flash Cards** | the capital of the highlighted state | you to name the highlighted country (capital shown as a bonus on the flip side) |
+| 3 | **Multiple Choice** | the capital, from 4 options pulled from *nearby* states | the country name, from 4 options pulled from *neighboring* countries |
+| 4 | **Matching** | states to capitals, in sets of 10 | countries to capitals, in sets of 10 (a bonus round — see below) |
+| 5 | **Map Fill-In** | you locate the state and type its capital | you locate the country and type its name |
+| 6 | **Fill in the Blank** | just the state name, no aids | just the country's outline alone, zoomed in with no neighboring countries for context — the hardest round |
+
+The **Introduction** round exists so you're not guessing "Didn't Know" over and over the moment you start a brand-new pack — it's just a calm first pass to see everything once before you're tested on it. If there's a well-known song or mnemonic for the pack (like "Fifty Nifty United States" for the 50-state pack), it's shown right on this round too.
+
+<!-- TODO: add screenshots/level0-introduction.png — capture the Introduction round (the Next/Previous browsing screen) and drop it in the screenshots/ folder -->
 
 The idea for world regions: **learning where a country is and what it's called comes first — its capital is a nice bonus**, not the main event. States mode stays capital-focused throughout, same as it's always been.
 
 ![Studying a country on the map](screenshots/continent-map-question.png)
 
-Every level — not just Map Fill-In — now shows a small live map with the current state or country highlighted, so you always have a visual reference while you think. Tiny countries (Vatican City, Monaco, Andorra, etc.) get an extra target-ring marker so they don't disappear at map scale.
+Every graded round — not just Map Fill-In — shows a small live map with the current state or country highlighted, so you always have a visual reference while you think. Tiny countries (Vatican City, Monaco, Andorra, etc.) get an extra target-ring marker so they don't disappear at map scale, and the four U.S. regions above automatically zoom the map in to that region instead of showing it as a speck on the full country.
 
-You choose how strict "passing" is, framed as a school grade — now a compact one-line row under **Set Your Difficulty Level**:
+You choose how strict "passing" is, framed as a school grade — a compact one-line row under **Set Your Difficulty Level**:
 
 ![Set your difficulty level](screenshots/difficulty-level.png)
 
 - **A+** (100%), **A** (90%), **B** (80%), or **C** (70%)
 
-Whichever you pick becomes the bar for unlocking the next level — so passing at the "B" setting tells you that if you took a real test on this material right now, you'd probably score a B or better.
+Whichever you pick becomes the bar for unlocking the next round — so passing at the "B" setting tells you that if you took a real test on this material right now, you'd probably score a B or better. Finishing the last round unlocks every round in the pack for free practice, in any order, any time.
 
 ## Screenshots
 
-### Level 1 — Flash Cards
+### Introduction
+<!-- TODO: add screenshots/level0-introduction.png (see above) -->
+
+### Flash Cards
 ![Flash Cards](screenshots/level1-flash-cards.png)
 
-### Level 2 — Multiple Choice
+### Multiple Choice
 ![Multiple Choice](screenshots/level2-multiple-choice.png)
 
-### Level 3 — Matching
+### Matching
 ![Matching](screenshots/level3-matching.png)
 
-### Level 4 — Map Fill-In
+### Map Fill-In
 ![Map Fill-In](screenshots/level4-map-fill-in.png)
 
-### Level 5 — Fill in the Blank
+### Fill in the Blank
 ![Fill in the Blank](screenshots/level5-fill-in-the-blank.png)
 
 ### Study List
@@ -82,10 +99,10 @@ A focused round built from your 10 most-missed states or countries, ranked by ho
 
   ![Progress map with correct (green), missed (orange), and current (red) states](screenshots/continent-map-question.png)
 
-- **Review Weak States** — every wrong answer is quietly logged in the background, across all levels. Once you've missed anything, a "Review Weak States" button appears next to Study List, showing a live count. Tapping it pulls your 10 most-missed states/countries (ranked by miss count) into a focused round; a "Back to Levels" button takes you back to your regular progress whenever you're done.
+- **Review Weak States** — every wrong answer is quietly logged in the background, across all rounds. Once you've missed anything, a "Review Weak States" button appears next to Study List, showing a live count. Tapping it pulls your 10 most-missed states/countries (ranked by miss count) into a focused round; a "Back to Levels" button takes you back to your regular progress whenever you're done.
 - **How This Works** — a small link in the app header opens this README, so help is always one tap away.
-- **Progress is saved automatically, per region** — your level, unlocks, difficulty setting, and stamped map all persist between visits (stored locally on your device, nothing sent anywhere). Studying South America doesn't touch your States progress, and vice versa.
-- **Reset Progress** — a small link under the stamp counter wipes that region's saved state (unlocked levels, stamped map, and weak-item history) and starts it back at Level 1. It asks for confirmation first, then reloads.
+- **Progress is saved automatically, per pack** — your round, unlocks, difficulty setting, and stamped map all persist between visits (stored locally on your device, nothing sent anywhere). Studying South America doesn't touch your States progress, and studying just the Northeast doesn't touch the full 50-state pack or any other region — each one is tracked completely independently.
+- **Reset Progress** — a small link under the stamp counter wipes that pack's saved state (unlocked rounds, stamped map, and weak-item history) and starts it back at round 1. It asks for confirmation first, then reloads.
 - **Sound + haptic feedback on correct answers** — a tone plus a light buzz/tap confirms you got it right. Haptics use `navigator.vibrate` where it's supported (Android); on iPhone, Safari has no vibration API at all, so the app uses an unofficial workaround (toggling a hidden native switch) to get a system haptic tick on iOS 18+. It's a hack, not an official API, so it may stop working in a future iOS release — see the note in [Running it yourself](#running-it-yourself). Wrong answers only get the sound, no vibration — and stay on screen long enough to actually read and remember the correct answer before moving on.
 - Works as an installed home-screen app — see below.
 
