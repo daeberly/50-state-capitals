@@ -848,7 +848,7 @@ function PackApp({ pack, onBackToPacks, lastUpdatedLabel }) {
                 }
                 return { ...d, pos: nextPos, correct: nextCorrect, total: nextTotal };
             });
-        }, correct ? 350 : 2400);
+        }, correct ? 350 : 800);
     }
     function finishLevel(passed) {
         if (passed) {
